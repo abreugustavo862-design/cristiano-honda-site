@@ -20,74 +20,87 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'], },
-                    colors: { premium: { dark: '#0A0A0A', panel: '#121212', border: '#262626', honda: '#E4002B', gray: '#888888' } }
+                    colors: { 
+                        premium: { 
+                            bg: '#F4F7F9', // Cinza/Azul clarinho (Fundo Geral)
+                            panel: '#FFFFFF', // Painéis brancos
+                            border: '#E2E8F0', // Bordas suaves
+                            text: '#1E293B', // Texto principal (Cinza Chumbo)
+                            muted: '#64748B', // Texto secundário
+                            honda: '#E4002B', // Vermelho Honda
+                            nivus: '#0EA5E9' // Azul tech (Detalhes e foco)
+                        } 
+                    }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0A0A0A; color: #FFFFFF; overflow: hidden; }
+        body { background-color: #F4F7F9; color: #1E293B; overflow: hidden; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
         [x-cloak] { display: none !important; }
+        
+        /* Efeito glassmorphism suave */
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="antialiased h-screen flex" x-data="arkheCrm()">
 
-    <aside class="w-64 bg-premium-panel border-r border-premium-border flex flex-col hidden md:flex">
+    <aside class="w-64 bg-premium-panel border-r border-premium-border flex flex-col hidden md:flex shadow-sm z-20">
         
         <div class="h-20 flex items-center px-6 border-b border-premium-border">
-            <h1 class="text-xl font-bold tracking-tight">Arkhe<span class="text-premium-honda font-light">CRM</span></h1>
+            <h1 class="text-xl font-bold tracking-tight text-premium-text">Arkhe<span class="text-premium-honda font-light">CRM</span></h1>
         </div>
 
         <nav class="flex-1 px-4 py-6 space-y-2">
-            <p class="px-2 text-[10px] font-semibold text-premium-gray uppercase tracking-widest mb-4">Gestão Comercial</p>
+            <p class="px-2 text-[10px] font-bold text-premium-muted uppercase tracking-widest mb-4">Gestão Comercial</p>
             
-            <button @click="rotaAtiva = 'dashboard'" :class="rotaAtiva === 'dashboard' ? 'bg-white/10 text-white' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+            <button @click="rotaAtiva = 'dashboard'" :class="rotaAtiva === 'dashboard' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors">
+                <svg class="w-5 h-5" :class="rotaAtiva === 'dashboard' ? 'text-premium-nivus' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                 Visão Geral
             </button>
 
-            <button @click="rotaAtiva = 'leads'" :class="rotaAtiva === 'leads' ? 'bg-premium-honda text-white shadow-[0_0_15px_rgba(228,0,43,0.3)]' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+            <button @click="rotaAtiva = 'leads'" :class="rotaAtiva === 'leads' ? 'bg-premium-honda text-white shadow-[0_4px_15px_-3px_rgba(228,0,43,0.4)] font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors">
                 <div class="flex items-center gap-3">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                     Meus Leads
                 </div>
-                <span class="bg-premium-dark text-xs px-2 py-0.5 rounded-md border border-premium-border" x-text="leads.length"></span>
+                <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md" x-text="leads.length"></span>
             </button>
 
-            <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-white/10 text-white' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mt-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mt-2">
+                <svg class="w-5 h-5" :class="rotaAtiva === 'estoque' ? 'text-premium-nivus' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                 Estoque da Loja
             </button>
         </nav>
 
         <div class="p-4 border-t border-premium-border">
-            <div class="flex items-center gap-3 bg-premium-dark p-3 rounded-xl border border-premium-border">
-                <div class="w-8 h-8 bg-gradient-to-br from-premium-honda to-red-900 rounded-full flex items-center justify-center font-bold text-xs">G</div>
+            <div class="flex items-center gap-3 bg-premium-bg p-3 rounded-xl border border-premium-border">
+                <div class="w-8 h-8 bg-premium-honda rounded-full flex items-center justify-center font-bold text-white text-xs shadow-md">G</div>
                 <div class="flex-1 overflow-hidden">
-                    <p class="text-sm font-medium text-white truncate">Gustavo</p>
-                    <p class="text-[10px] text-premium-gray truncate">Consultor Premium</p>
+                    <p class="text-sm font-bold text-premium-text truncate">Gustavo</p>
+                    <p class="text-[10px] text-premium-muted truncate uppercase tracking-wider">Consultor Premium</p>
                 </div>
             </div>
         </div>
     </aside>
 
-    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-premium-dark">
+    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-premium-bg relative z-10">
         
-        <header class="h-20 bg-premium-panel/50 backdrop-blur-md border-b border-premium-border flex items-center justify-between px-8">
+        <header class="h-20 glass-panel border-b border-premium-border flex items-center justify-between px-8">
             <div class="flex items-center gap-4">
-                <h2 class="text-xl font-medium" x-text="tituloPagina()"></h2>
+                <h2 class="text-xl font-bold text-premium-text" x-text="tituloPagina()"></h2>
             </div>
             
             <div class="flex items-center gap-4">
-                <button @click="copiarLink()" class="flex items-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 rounded-lg text-sm font-medium transition-colors group">
-                    <span class="text-premium-gray group-hover:text-white transition-colors">Meu Link:</span>
-                    <span class="text-white truncate w-32" x-text="meuLink"></span>
-                    <svg class="w-4 h-4 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <button @click="copiarLink()" class="flex items-center gap-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-premium-nivus px-4 py-2 rounded-lg text-sm font-medium transition-all group">
+                    <span class="text-premium-muted group-hover:text-premium-text transition-colors">Meu Link:</span>
+                    <span class="text-premium-text truncate w-32" x-text="meuLink"></span>
+                    <svg class="w-4 h-4 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 </button>
-                <a href="index.html" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Sair</a>
+                <a href="index.html" class="bg-red-50 text-premium-honda border border-red-100 hover:bg-premium-honda hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Sair</a>
             </div>
         </header>
 
@@ -96,124 +109,122 @@
             <div x-show="rotaAtiva === 'dashboard'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-bl-full -z-10"></div>
-                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Total de Leads</p>
-                        <p class="text-4xl font-light text-white" x-text="leads.length"></p>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Total de Leads</p>
+                        <p class="text-4xl font-light text-premium-text" x-text="leads.length"></p>
                     </div>
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-500/10 rounded-bl-full -z-10"></div>
-                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Em Análise</p>
-                        <p class="text-4xl font-light text-yellow-500" x-text="leads.filter(l => l.status === 'Análise').length"></p>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Em Análise</p>
+                        <p class="text-4xl font-light text-yellow-600" x-text="leads.filter(l => l.status === 'Análise').length"></p>
                     </div>
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-green-500/10 rounded-bl-full -z-10"></div>
-                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Aprovados</p>
-                        <p class="text-4xl font-light text-green-500" x-text="leads.filter(l => l.status === 'Aprovado').length"></p>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Aprovados</p>
+                        <p class="text-4xl font-light text-green-600" x-text="leads.filter(l => l.status === 'Aprovado').length"></p>
                     </div>
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden border-b-4 border-b-premium-honda">
-                        <div class="absolute top-0 right-0 w-16 h-16 bg-premium-honda/10 rounded-bl-full -z-10"></div>
-                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Minhas Vendas</p>
-                        <p class="text-4xl font-semibold text-white" x-text="ranking.find(v => v.nome === 'Gustavo').vendas"></p>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Minhas Vendas</p>
+                        <p class="text-4xl font-semibold text-premium-nivus" x-text="ranking.find(v => v.nome === 'Gustavo').vendas"></p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6">
-                        <h3 class="text-lg font-medium mb-6 flex items-center justify-between">
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-lg font-bold text-premium-text mb-6 flex items-center justify-between">
                             Ranking da Loja 🏆
-                            <span class="text-[10px] bg-white/5 border border-white/10 px-2 py-1 rounded text-premium-gray">Atualizado Agora</span>
+                            <span class="text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
                         </h3>
                         <div class="space-y-3">
                             <template x-for="(vendedor, index) in ranking.slice(0,5)" :key="index">
-                                <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-premium-border hover:bg-premium-dark transition-colors" :class="index === 0 ? 'bg-gradient-to-r from-yellow-500/5 to-transparent border-l-2 border-l-yellow-500' : ''">
+                                <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-yellow-50/50 border border-yellow-100 border-l-4 border-l-yellow-400' : ''">
                                     <div class="flex items-center gap-4">
-                                        <span class="text-gray-500 font-bold w-4 text-center" x-text="index + 1"></span>
-                                        <div class="w-8 h-8 rounded-full bg-premium-border flex items-center justify-center text-xs text-white" x-text="vendedor.nome.charAt(0)"></div>
-                                        <p class="text-sm font-medium text-white">
+                                        <span class="text-slate-400 font-black w-4 text-center text-lg" x-text="index + 1"></span>
+                                        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600" x-text="vendedor.nome.charAt(0)"></div>
+                                        <p class="text-sm font-bold text-premium-text">
                                             <span x-text="vendedor.nome"></span>
-                                            <span x-show="vendedor.nome === 'Gustavo'" class="text-[10px] text-premium-honda ml-2 bg-premium-honda/10 px-2 py-0.5 rounded">Você</span>
+                                            <span x-show="vendedor.nome === 'Gustavo'" class="text-[9px] text-premium-nivus ml-2 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wider font-black">Você</span>
                                         </p>
                                     </div>
-                                    <div class="text-sm font-bold text-white"><span x-text="vendedor.vendas"></span> <span class="text-[10px] text-gray-500 font-normal">Motos</span></div>
+                                    <div class="text-sm font-black text-premium-text"><span x-text="vendedor.vendas"></span> <span class="text-[10px] text-premium-muted font-semibold uppercase">Motos</span></div>
                                 </div>
                             </template>
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-br from-premium-panel to-black border border-premium-border rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden">
-                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-premium-honda/20 blur-3xl rounded-full"></div>
-                        <h3 class="text-2xl font-light mb-2">Bem-vindo ao futuro da <span class="font-semibold text-premium-honda">Venda Digital.</span></h3>
-                        <p class="text-premium-gray text-sm leading-relaxed mb-6">
-                            Você não precisa mais usar caderninhos. Cadastre seus clientes, acompanhe suas aprovações e bata suas metas. O sistema trabalha para você.
+                    <div class="bg-gradient-to-br from-[#E8F0FE] to-[#FFFFFF] border border-[#DCE4F0] rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden shadow-sm">
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-[#0EA5E9]/10 blur-3xl rounded-full"></div>
+                        <h3 class="text-2xl font-light text-slate-800 mb-2">Futuro da <span class="font-bold text-premium-nivus">Venda Digital.</span></h3>
+                        <p class="text-premium-muted text-sm leading-relaxed mb-6 font-medium">
+                            Você não precisa mais usar caderninhos. Cadastre clientes, acompanhe aprovações e bata metas. O sistema trabalha para você.
                         </p>
-                        <button @click="rotaAtiva = 'leads'" class="bg-white text-black font-semibold px-6 py-3 rounded-lg text-sm w-max hover:bg-gray-200 transition-colors">
+                        <button @click="rotaAtiva = 'leads'" class="bg-premium-text text-white font-bold px-6 py-3 rounded-xl text-sm w-max hover:bg-slate-700 hover:shadow-lg transition-all">
                             Acessar Meus Leads
                         </button>
                     </div>
-
                 </div>
             </div>
 
             <div x-show="rotaAtiva === 'leads'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                 
-                <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-xl">
+                <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-sm">
                     <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end">
                         <div class="flex-1 w-full">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Nome do Cliente</label>
-                            <input type="text" x-model="novoLead.nome" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                            <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Nome do Cliente</label>
+                            <input type="text" x-model="novoLead.nome" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                         </div>
                         <div class="flex-1 w-full">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Interesse (Moto)</label>
-                            <input type="text" x-model="novoLead.moto" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                            <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Interesse (Moto)</label>
+                            <input type="text" x-model="novoLead.moto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                         </div>
                         <div class="flex-1 w-full">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">WhatsApp</label>
-                            <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                            <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">WhatsApp</label>
+                            <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                         </div>
-                        <button type="submit" class="bg-premium-honda text-white font-medium rounded-lg px-8 py-3 text-sm hover:bg-red-800 transition-colors w-full md:w-auto">
+                        <button type="submit" class="bg-premium-honda text-white font-bold tracking-wide rounded-xl px-8 py-3 text-sm hover:bg-red-700 hover:shadow-lg transition-all w-full md:w-auto">
                             Salvar Ficha
                         </button>
                     </form>
                 </div>
 
-                <div class="bg-premium-panel border border-premium-border rounded-2xl overflow-hidden">
+                <div class="bg-premium-panel border border-premium-border rounded-2xl overflow-hidden shadow-sm">
                     <table class="w-full text-left border-collapse whitespace-nowrap">
                         <thead>
-                            <tr class="bg-premium-dark/50 border-b border-premium-border">
-                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Cliente</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Máquina Desejada</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Data</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Status / Funil</th>
-                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest text-right">Ação</th>
+                            <tr class="bg-slate-50 border-b border-premium-border">
+                                <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Cliente</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Máquina Desejada</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Data</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Status / Funil</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest text-right">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
                             <template x-for="(lead, index) in leads" :key="index">
-                                <tr class="border-b border-premium-border hover:bg-white/[0.02] transition-colors">
+                                <tr class="border-b border-premium-border hover:bg-slate-50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-full bg-premium-border flex items-center justify-center text-xs font-bold text-gray-400" x-text="lead.nome.charAt(0)"></div>
+                                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-black uppercase" x-text="lead.nome.charAt(0)"></div>
                                             <div>
-                                                <p class="text-sm font-medium text-white" x-text="lead.nome"></p>
-                                                <p class="text-[11px] text-gray-500" x-text="lead.telefone"></p>
+                                                <p class="text-sm font-bold text-premium-text" x-text="lead.nome"></p>
+                                                <p class="text-[11px] font-medium text-premium-muted" x-text="lead.telefone"></p>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-300" x-text="lead.moto"></td>
-                                    <td class="px-6 py-4 text-sm text-gray-500">Hoje</td>
+                                    <td class="px-6 py-4 text-sm font-medium text-slate-700" x-text="lead.moto"></td>
+                                    <td class="px-6 py-4 text-sm font-medium text-premium-muted">Hoje</td>
                                     <td class="px-6 py-4">
-                                        <select x-model="lead.status" @change="atualizarStatus(lead)" class="text-xs font-semibold px-3 py-1.5 rounded-md outline-none appearance-none cursor-pointer border border-transparent transition-colors"
-                                            :class="{'bg-yellow-500/10 text-yellow-500 border-yellow-500/20': lead.status === 'Análise', 'bg-green-500/10 text-green-500 border-green-500/20': lead.status === 'Aprovado', 'bg-red-500/10 text-red-500 border-red-500/20': lead.status === 'Reprovado', 'bg-blue-500/10 text-blue-500 border-blue-500/20': lead.status === 'Vendido'}">
-                                            <option value="Análise" class="bg-premium-panel text-white">⏳ Em Análise</option>
-                                            <option value="Aprovado" class="bg-premium-panel text-white">✅ Aprovado</option>
-                                            <option value="Reprovado" class="bg-premium-panel text-white">❌ Reprovado</option>
-                                            <option value="Vendido" class="bg-premium-panel text-white">🏆 Vendido</option>
+                                        <select x-model="lead.status" @change="atualizarStatus(lead)" class="text-xs font-bold px-3 py-1.5 rounded-lg outline-none appearance-none cursor-pointer border transition-colors shadow-sm"
+                                            :class="{'bg-yellow-50 text-yellow-700 border-yellow-200': lead.status === 'Análise', 'bg-green-50 text-green-700 border-green-200': lead.status === 'Aprovado', 'bg-red-50 text-red-700 border-red-200': lead.status === 'Reprovado', 'bg-blue-50 text-blue-700 border-blue-200': lead.status === 'Vendido'}">
+                                            <option value="Análise" class="bg-white text-slate-800">⏳ Em Análise</option>
+                                            <option value="Aprovado" class="bg-white text-slate-800">✅ Aprovado</option>
+                                            <option value="Reprovado" class="bg-white text-slate-800">❌ Reprovado</option>
+                                            <option value="Vendido" class="bg-white text-slate-800">🏆 Vendido</option>
                                         </select>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        <a :href="'https://wa.me/55' + lead.telefone.replace(/\D/g,'')" target="_blank" class="inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors">
+                                        <a :href="'https://wa.me/55' + lead.telefone.replace(/\D/g,'')" target="_blank" class="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-600 hover:bg-green-600 hover:text-white px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
                                             <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
                                             Chamar
                                         </a>
@@ -221,7 +232,7 @@
                                 </tr>
                             </template>
                             <tr x-show="leads.length === 0">
-                                <td colspan="5" class="px-6 py-12 text-center text-premium-gray text-sm">Nenhum lead cadastrado ainda. Compartilhe seu link!</td>
+                                <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-sm">Nenhum lead cadastrado ainda. Compartilhe seu link para começar!</td>
                             </tr>
                         </tbody>
                     </table>
@@ -230,21 +241,21 @@
 
             <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-light text-white">Estoque <span class="font-semibold text-premium-honda">Premium</span></h2>
-                    <button @click="resetarEstoque()" class="text-xs text-red-500 hover:text-white font-medium px-4 py-2 border border-red-500/30 hover:bg-red-500 rounded-lg transition-all">Resetar Base</button>
+                    <h2 class="text-2xl font-bold text-premium-text">Estoque <span class="font-light">Premium</span></h2>
+                    <button @click="resetarEstoque()" class="text-[11px] text-red-600 hover:text-white font-bold uppercase tracking-wider px-4 py-2 bg-red-50 border border-red-200 hover:bg-red-500 rounded-lg transition-all shadow-sm">Resetar Base</button>
                 </div>
 
                 <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
                     <div class="xl:col-span-1">
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative shadow-lg">
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative shadow-sm">
                             <div class="flex items-center gap-2 mb-6">
-                                <div class="w-1 h-4 bg-premium-honda rounded-full"></div>
-                                <h2 class="text-sm font-bold text-white uppercase tracking-wider" x-text="editandoIndex !== null ? 'Modo de Edição' : 'Nova Máquina'"></h2>
+                                <div class="w-1.5 h-4 bg-premium-nivus rounded-full"></div>
+                                <h2 class="text-xs font-black text-premium-text uppercase tracking-widest" x-text="editandoIndex !== null ? 'Modo de Edição' : 'Nova Máquina'"></h2>
                             </div>
                             
                             <form @submit.prevent="cadastrarMoto" class="space-y-4">
                                 <div>
-                                    <div class="relative w-full h-36 bg-[#0F0F0F] hover:bg-[#151515] border border-dashed border-gray-700 rounded-xl flex items-center justify-center overflow-hidden group cursor-pointer transition-colors">
+                                    <div class="relative w-full h-36 bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-premium-nivus rounded-xl flex items-center justify-center overflow-hidden group cursor-pointer transition-all">
                                         <input type="file" accept="image/*" @change="processarFoto" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                         
                                         <template x-if="novaMoto.foto">
@@ -252,8 +263,8 @@
                                         </template>
                                         <template x-if="!novaMoto.foto">
                                             <div class="text-center group-hover:scale-105 transition-transform duration-300">
-                                                <svg class="w-8 h-8 mx-auto text-premium-gray mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                                <span class="text-[11px] text-gray-400 font-medium tracking-wide uppercase">Adicionar Foto</span>
+                                                <svg class="w-8 h-8 mx-auto text-premium-nivus mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                <span class="text-[10px] text-slate-600 font-bold tracking-wider uppercase">Adicionar Foto</span>
                                             </div>
                                         </template>
                                     </div>
@@ -261,80 +272,80 @@
 
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="col-span-2">
-                                        <input type="text" x-model="novaMoto.modelo" placeholder="Modelo (Ex: Titan S)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="text" x-model="novaMoto.modelo" placeholder="Modelo (Ex: Titan S)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                     <div>
-                                        <input type="number" x-model="novaMoto.cilindrada" placeholder="Cilindrada (Ex: 160)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="number" x-model="novaMoto.cilindrada" placeholder="Cilindrada (cc)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                     <div>
-                                        <input type="number" x-model="novaMoto.ano" placeholder="Ano (Ex: 2024)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="number" x-model="novaMoto.ano" placeholder="Ano (Ex: 2024)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                     <div>
-                                        <input type="text" x-model="novaMoto.cor" placeholder="Cor (Ex: Vermelha)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="text" x-model="novaMoto.cor" placeholder="Cor (Ex: Vermelha)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                     <div>
-                                        <input type="number" x-model="novaMoto.km" placeholder="KM (0 p/ Nova)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="number" x-model="novaMoto.km" placeholder="KM (0 p/ Nova)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                     <div>
-                                        <input type="text" x-model="novaMoto.placa" placeholder="Placa (Ex: ABC-1234)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all uppercase">
+                                        <input type="text" x-model="novaMoto.placa" placeholder="Placa (Ex: ABC1234)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all uppercase">
                                     </div>
                                     <div>
-                                        <input type="text" x-model="novaMoto.preco" placeholder="Preço (Ex: 18.500)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                        <input type="text" x-model="novaMoto.preco" placeholder="Preço (Ex: 18.500)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                     </div>
                                 </div>
 
-                                <div class="pt-4 border-t border-premium-border flex gap-2">
-                                    <button type="submit" class="flex-1 bg-white text-black font-semibold rounded-lg py-2.5 text-xs tracking-wide uppercase hover:bg-gray-200 transition-colors" x-text="editandoIndex !== null ? 'Salvar Alterações' : 'Adicionar ao Estoque'"></button>
-                                    <button type="button" x-show="editandoIndex !== null" @click="cancelarEdicao" class="bg-transparent border border-gray-600 text-gray-400 rounded-lg px-4 py-2.5 text-xs uppercase tracking-wide hover:bg-gray-800 transition-colors">Cancelar</button>
+                                <div class="pt-4 flex gap-2">
+                                    <button type="submit" class="flex-1 bg-premium-text text-white font-bold rounded-xl py-3 text-xs tracking-wider uppercase hover:bg-slate-700 shadow-md hover:shadow-lg transition-all" x-text="editandoIndex !== null ? 'Salvar Alterações' : 'Adicionar ao Estoque'"></button>
+                                    <button type="button" x-show="editandoIndex !== null" @click="cancelarEdicao" class="bg-white border border-slate-300 text-slate-600 rounded-xl px-5 py-3 text-xs font-bold uppercase tracking-wider hover:bg-slate-50 transition-colors shadow-sm">Cancelar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
                     <div class="xl:col-span-2">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <template x-for="(moto, index) in motosEstoque" :key="index">
-                                <div class="bg-premium-dark border border-premium-border rounded-2xl overflow-hidden flex flex-col group hover:border-gray-600 transition-all duration-300 shadow-lg">
+                                <div class="bg-premium-panel border border-slate-200 rounded-2xl overflow-hidden flex flex-col group hover:border-premium-nivus hover:shadow-md transition-all duration-300 shadow-sm">
                                     
-                                    <div class="relative h-44 w-full bg-[#0A0A0A] flex items-center justify-center overflow-hidden border-b border-premium-border">
+                                    <div class="relative h-48 w-full bg-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-100">
                                         <template x-if="moto.foto">
                                             <img :src="moto.foto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                                         </template>
                                         <template x-if="!moto.foto">
-                                            <svg class="w-12 h-12 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                            <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
                                         </template>
                                         
-                                        <div class="absolute top-3 left-3 bg-green-500/90 backdrop-blur-sm text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded">Disponível</div>
-                                        <button @click="editarMoto(index)" class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white p-1.5 rounded hover:bg-blue-500 transition-colors" title="Editar">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-green-600 text-[9px] uppercase tracking-widest font-black px-2 py-1 rounded shadow-sm border border-green-100">Disponível</div>
+                                        <button @click="editarMoto(index)" class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 p-1.5 rounded hover:bg-premium-nivus hover:text-white transition-colors shadow-sm border border-slate-100" title="Editar">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                         </button>
                                     </div>
 
-                                    <div class="p-5 flex-1 flex flex-col">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h3 class="text-lg font-bold text-white truncate pr-2" x-text="moto.modelo"></h3>
-                                            <span class="text-premium-honda font-black text-sm" x-text="moto.cilindrada + 'cc'"></span>
+                                    <div class="p-5 flex-1 flex flex-col bg-white">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <h3 class="text-lg font-black text-premium-text truncate pr-2" x-text="moto.modelo"></h3>
+                                            <span class="bg-blue-50 text-premium-nivus font-black text-[10px] px-2 py-1 rounded uppercase tracking-wider" x-text="moto.cilindrada + 'cc'"></span>
                                         </div>
                                         
-                                        <div class="flex flex-wrap gap-1.5 mb-5 mt-1">
-                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium" x-text="moto.ano"></span>
-                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
-                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium capitalize" x-text="moto.cor"></span>
-                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium uppercase tracking-wider" x-text="moto.placa"></span>
+                                        <div class="flex flex-wrap gap-2 mb-5">
+                                            <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold" x-text="moto.ano"></span>
+                                            <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
+                                            <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold capitalize" x-text="moto.cor"></span>
+                                            <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider" x-text="moto.placa"></span>
                                         </div>
                                         
-                                        <div class="mt-auto mb-4">
-                                            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-widest mb-0.5">Valor à vista</p>
-                                            <p class="text-2xl font-light text-white tracking-tight">R$ <span x-text="moto.preco"></span></p>
+                                        <div class="mt-auto mb-5">
+                                            <p class="text-[9px] text-premium-muted font-bold uppercase tracking-widest mb-0.5">Valor à vista</p>
+                                            <p class="text-3xl font-light text-slate-800 tracking-tight">R$ <span class="font-bold" x-text="moto.preco"></span></p>
                                         </div>
                                         
-                                        <div class="grid grid-cols-2 gap-2 pt-4 border-t border-premium-border">
-                                            <button @click="venderMoto(index)" class="flex items-center justify-center gap-1.5 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <button @click="venderMoto(index)" class="flex items-center justify-center gap-1.5 bg-green-50 border border-green-200 text-green-700 hover:bg-green-600 hover:text-white py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-sm">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                                 Vendida
                                             </button>
-                                            <button @click="excluirErro(index)" class="flex items-center justify-center gap-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            <button @click="excluirErro(index)" class="flex items-center justify-center gap-1.5 bg-red-50 border border-red-100 text-red-600 hover:bg-red-600 hover:text-white py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all shadow-sm">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                 Errada
                                             </button>
                                         </div>
@@ -342,10 +353,10 @@
                                 </div>
                             </template>
                             
-                            <div x-show="motosEstoque.length === 0" class="col-span-full py-16 text-center border-2 border-dashed border-gray-800 rounded-2xl flex flex-col items-center justify-center">
-                                <svg class="w-12 h-12 text-gray-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                <p class="text-gray-400 text-sm font-medium">Sua vitrine está vazia.</p>
-                                <p class="text-gray-600 text-xs mt-1">Cadastre as máquinas para iniciar as vendas.</p>
+                            <div x-show="motosEstoque.length === 0" class="col-span-full py-16 text-center border-2 border-dashed border-slate-200 bg-white rounded-2xl flex flex-col items-center justify-center shadow-sm">
+                                <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                <p class="text-premium-text text-sm font-bold">Sua vitrine está vazia.</p>
+                                <p class="text-premium-muted text-xs mt-1 font-medium">Cadastre as máquinas para iniciar as vendas.</p>
                             </div>
                         </div>
                     </div>
@@ -371,7 +382,6 @@
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
                 
-                // MÁGICA: Estrutura da moto atualizada com os novos campos
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', foto: '' },
                 
                 motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [
@@ -411,7 +421,6 @@
                     await window.banco.from('leads').update({ status: lead.status }).eq('id', lead.id);
                 },
 
-                // FUNÇÕES DO ESTOQUE E GAMIFICAÇÃO
                 salvarDadosLocais() {
                     localStorage.setItem('arkhe_estoque', JSON.stringify(this.motosEstoque));
                     localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
