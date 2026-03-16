@@ -12,7 +12,6 @@
     <script>
         const supabaseUrl = 'https://uskuxnireyjvldgvngzq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza3V4bmlyZXlqdmxkZ3ZuZ3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzkyODYsImV4cCI6MjA4OTI1NTI4Nn0.X-6a0ZBPuL0CLC8tSrSNJn8UrOemGhse4IAfetKvLGc';
-        // CORREÇÃO CIRÚRGICA 1: Usando window.banco
         window.banco = window.supabase.createClient(supabaseUrl, supabaseKey);
     </script>
     
@@ -114,8 +113,8 @@
                     </div>
                     <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden border-b-4 border-b-premium-honda">
                         <div class="absolute top-0 right-0 w-16 h-16 bg-premium-honda/10 rounded-bl-full -z-10"></div>
-                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Vendas Fechadas</p>
-                        <p class="text-4xl font-semibold text-white">08</p>
+                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Minhas Vendas</p>
+                        <p class="text-4xl font-semibold text-white" x-text="ranking.find(v => v.nome === 'Gustavo').vendas"></p>
                     </div>
                 </div>
 
@@ -230,13 +229,35 @@
             </div>
 
             <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-light text-white">Estoque Completo</h2>
+                    <button @click="resetarEstoque()" class="text-xs text-red-500 hover:text-red-400 font-medium px-4 py-2 bg-red-500/10 rounded-lg transition-colors">⚠️ Resetar Estoque</button>
+                </div>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-1">
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6">
-                            <h2 class="text-lg font-medium mb-2 text-white">Catalogar Moto</h2>
-                            <p class="text-xs text-gray-500 mb-6">Ao salvar, o veículo será enviado para o banco de dados da loja.</p>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative">
+                            <h2 class="text-lg font-medium mb-2 text-white" x-text="editandoIndex !== null ? '✏️ Editando Máquina' : 'Catalogar Nova Moto'"></h2>
+                            <p class="text-xs text-gray-500 mb-6">Insira os detalhes e adicione uma foto atrativa.</p>
                             
                             <form @submit.prevent="cadastrarMoto" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Foto da Moto</label>
+                                    <div class="relative w-full h-32 bg-premium-dark border border-dashed border-premium-border rounded-lg flex items-center justify-center overflow-hidden group cursor-pointer">
+                                        <input type="file" accept="image/*" @change="processarFoto" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                                        
+                                        <template x-if="novaMoto.foto">
+                                            <img :src="novaMoto.foto" class="w-full h-full object-cover">
+                                        </template>
+                                        <template x-if="!novaMoto.foto">
+                                            <div class="text-center group-hover:text-premium-honda transition-colors">
+                                                <svg class="w-8 h-8 mx-auto text-gray-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                <span class="text-xs text-gray-500 font-medium">Clique para Enviar</span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+
                                 <div>
                                     <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Modelo Exato</label>
                                     <input type="text" x-model="novaMoto.modelo" placeholder="Ex: Titan 160 S" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
@@ -251,9 +272,10 @@
                                         <input type="text" x-model="novaMoto.preco" placeholder="18.500" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
                                     </div>
                                 </div>
-                                <button type="submit" class="w-full bg-white text-black font-semibold rounded-lg px-4 py-3 mt-4 text-sm hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
-                                    Sincronizar Estoque
-                                </button>
+                                <div class="flex gap-2 mt-4">
+                                    <button type="submit" class="flex-1 bg-white text-black font-semibold rounded-lg px-4 py-3 text-sm hover:bg-gray-200 transition-colors" x-text="editandoIndex !== null ? 'Salvar Edição' : 'Sincronizar Estoque'"></button>
+                                    <button type="button" x-show="editandoIndex !== null" @click="cancelarEdicao" class="bg-premium-dark border border-premium-border text-white rounded-lg px-4 py-3 text-sm hover:bg-gray-800 transition-colors">Cancelar</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -263,18 +285,43 @@
                             <template x-for="(moto, index) in motosEstoque" :key="index">
                                 <div class="bg-premium-panel border border-premium-border rounded-xl p-5 flex flex-col justify-between hover:border-white/20 transition-colors">
                                     <div>
+                                        <div class="w-full h-40 bg-premium-dark rounded-lg mb-4 overflow-hidden border border-premium-border flex items-center justify-center">
+                                            <template x-if="moto.foto">
+                                                <img :src="moto.foto" class="w-full h-full object-cover">
+                                            </template>
+                                            <template x-if="!moto.foto">
+                                                <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                            </template>
+                                        </div>
+
                                         <div class="flex justify-between items-start mb-2">
                                             <h3 class="text-base font-semibold text-white truncate pr-2" x-text="moto.modelo"></h3>
                                             <span class="bg-premium-dark border border-premium-border text-[10px] text-gray-400 px-2 py-0.5 rounded" x-text="moto.ano"></span>
                                         </div>
                                         <p class="text-xl font-light text-white mb-4">R$ <span x-text="moto.preco"></span></p>
                                     </div>
-                                    <div class="flex justify-between items-center pt-3 border-t border-premium-border">
-                                        <span class="text-[10px] text-green-500 bg-green-500/10 px-2 py-1 rounded">Disponível</span>
-                                        <button @click="removerMoto(index)" class="text-[10px] text-red-500 hover:text-red-400 uppercase font-bold tracking-wider">Deletar</button>
+                                    
+                                    <div class="pt-3 border-t border-premium-border flex flex-col gap-3">
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-[10px] text-green-500 bg-green-500/10 px-2 py-1 rounded">Disponível</span>
+                                            <button @click="editarMoto(index)" class="text-[10px] text-blue-400 hover:text-blue-300 uppercase font-bold tracking-wider">✏️ Editar</button>
+                                        </div>
+                                        
+                                        <div class="flex gap-2 mt-1">
+                                            <button @click="venderMoto(index)" class="flex-1 bg-green-500/10 border border-green-500/20 text-green-500 hover:bg-green-500 hover:text-white px-2 py-2 rounded text-xs font-medium transition-colors">
+                                                ✅ Vendida
+                                            </button>
+                                            <button @click="excluirErro(index)" class="flex-1 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-2 py-2 rounded text-xs font-medium transition-colors">
+                                                🗑️ Errada
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </template>
+                            
+                            <div x-show="motosEstoque.length === 0" class="col-span-full py-12 text-center border border-dashed border-premium-border rounded-xl">
+                                <p class="text-premium-gray text-sm">O estoque está vazio. Comece a catalogar suas máquinas!</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -288,6 +335,7 @@
             return {
                 rotaAtiva: 'dashboard',
                 meuLink: 'cristianohonda-site.vercel.app/simulacao.html',
+                editandoIndex: null,
                 
                 tituloPagina() {
                     if(this.rotaAtiva === 'dashboard') return 'Visão Geral';
@@ -298,20 +346,18 @@
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
                 
-                novaMoto: { modelo: '', ano: '', preco: '' },
-                motosEstoque: [
-                    { modelo: 'CB 300F Twister ABS', ano: '2024', preco: '22.500' },
-                    { modelo: 'Sahara 300 Rally', ano: '2025', preco: '34.900' }
-                ],
+                novaMoto: { modelo: '', ano: '', preco: '', foto: '' },
                 
-                ranking: [
+                // MÁGICA: Puxando o Estoque e o Ranking da memória do navegador para sobreviver ao F5
+                motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [],
+                
+                ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
                     { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
                     { nome: 'Gustavo', vendas: 8 }, { nome: 'Nathan', vendas: 7 },
                     { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
                 ],
 
                 async init() {
-                    // Puxando os dados usando "banco.from"
                     const { data, error } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
                     if (data) {
                         this.leads = data;
@@ -319,7 +365,6 @@
                 },
 
                 async adicionarLead() {
-                    // Inserindo dados usando "banco.from"
                     const { data, error } = await window.banco.from('leads').insert([
                         {
                             nome: this.novoLead.nome,
@@ -336,18 +381,79 @@
                 },
 
                 async atualizarStatus(lead) {
-                    // Atualizando usando "banco.from"
                     await window.banco.from('leads').update({ status: lead.status }).eq('id', lead.id);
                 },
 
+                // FUNÇÕES DO ESTOQUE E GAMIFICAÇÃO
+                salvarDadosLocais() {
+                    localStorage.setItem('arkhe_estoque', JSON.stringify(this.motosEstoque));
+                    localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
+                },
+
+                processarFoto(event) {
+                    const file = event.target.files[0];
+                    if(!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.novaMoto.foto = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                },
+
                 cadastrarMoto() {
-                    this.motosEstoque.unshift({ ...this.novaMoto });
-                    this.novaMoto = { modelo: '', ano: '', preco: '' };
-                    alert('Máquina catalogada e enviada para a vitrine pública!');
+                    if(this.editandoIndex !== null) {
+                        // Salvando a Edição
+                        this.motosEstoque[this.editandoIndex] = { ...this.novaMoto };
+                        this.editandoIndex = null;
+                        alert('Máquina atualizada com sucesso!');
+                    } else {
+                        // Cadastrando Nova
+                        this.motosEstoque.unshift({ ...this.novaMoto });
+                        alert('Máquina catalogada com foto!');
+                    }
+                    this.novaMoto = { modelo: '', ano: '', preco: '', foto: '' };
+                    this.salvarDadosLocais();
                 },
                 
-                removerMoto(index) { 
-                    this.motosEstoque.splice(index, 1); 
+                editarMoto(index) {
+                    this.novaMoto = { ...this.motosEstoque[index] };
+                    this.editandoIndex = index;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+
+                cancelarEdicao() {
+                    this.novaMoto = { modelo: '', ano: '', preco: '', foto: '' };
+                    this.editandoIndex = null;
+                },
+
+                venderMoto(index) {
+                    // Pulo do Gato: Soma +1 no ranking do Gustavo!
+                    let gustavo = this.ranking.find(v => v.nome === 'Gustavo');
+                    if(gustavo) {
+                        gustavo.vendas += 1;
+                    }
+                    // Reordena o ranking para o maior ficar no topo
+                    this.ranking.sort((a, b) => b.vendas - a.vendas);
+                    
+                    // Remove a moto do estoque
+                    this.motosEstoque.splice(index, 1);
+                    this.salvarDadosLocais();
+                    
+                    alert('Venda Confirmada! Você acabou de subir no Ranking da Loja 🏆');
+                },
+
+                excluirErro(index) {
+                    if(confirm('Tem certeza que deseja apagar esse anúncio sem contabilizar venda?')) {
+                        this.motosEstoque.splice(index, 1);
+                        this.salvarDadosLocais();
+                    }
+                },
+
+                resetarEstoque() {
+                    if(confirm('ATENÇÃO: Isso vai limpar TODO o seu estoque de testes. Deseja continuar?')) {
+                        this.motosEstoque = [];
+                        this.salvarDadosLocais();
+                    }
                 },
                 
                 copiarLink() {
