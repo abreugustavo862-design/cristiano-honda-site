@@ -10,6 +10,13 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://uskuxnireyjvldgvngzq.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza3V4bmlyZXlqdmxkZ3ZuZ3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzkyODYsImV4cCI6MjA4OTI1NTI4Nn0.X-6a0ZBPuL0CLC8tSrSNJn8UrOemGhse4IAfetKvLGc';
+        window.banco = window.supabase.createClient(supabaseUrl, supabaseKey);
+    </script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -143,7 +150,7 @@
                     tipoCota: 'Nova',
                     openMenu: false,
                     
-                    enviarLead(telefone) {
+                    async enviarLead(telefone) {
                         if(this.nome.trim() === '') {
                             alert('Por favor, informe seu nome antes de escolher o consultor.');
                             this.openMenu = false;
@@ -153,6 +160,18 @@
                             alert('Por favor, informe qual moto você procura.');
                             this.openMenu = false;
                             return;
+                        }
+
+                        // MÁGICA ARKHE TECH: Salvando Consórcio no Supabase
+                        try {
+                            await window.banco.from('leads').insert([{
+                                nome: this.nome,
+                                moto: 'Consórcio: ' + this.modelo + ' (' + this.prazo + 'x)',
+                                telefone: 'Aguardando Contato', // Como o Consórcio não pede telefone, deixamos assim
+                                status: 'Análise'
+                            }]);
+                        } catch (e) {
+                            console.error('Erro ao salvar no banco', e);
                         }
                         
                         const texto = `🏁 *NOVO LEAD DE CONSÓRCIO* 🏁%0A%0A*Nome:* ${this.nome}%0A*Moto de Interesse:* ${this.modelo}%0A*Parcela Ideal:* R$ ${this.parcela},00 / mês%0A*Prazo Desejado:* ${this.prazo} meses%0A*Tipo de Cota:* ${this.tipoCota}%0A%0A_Olá! Preenchi o formulário no site e aguardo as opções._`;
