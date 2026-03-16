@@ -230,97 +230,122 @@
 
             <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                 <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-light text-white">Estoque Completo</h2>
-                    <button @click="resetarEstoque()" class="text-xs text-red-500 hover:text-red-400 font-medium px-4 py-2 bg-red-500/10 rounded-lg transition-colors">⚠️ Resetar Estoque</button>
+                    <h2 class="text-2xl font-light text-white">Estoque <span class="font-semibold text-premium-honda">Premium</span></h2>
+                    <button @click="resetarEstoque()" class="text-xs text-red-500 hover:text-white font-medium px-4 py-2 border border-red-500/30 hover:bg-red-500 rounded-lg transition-all">Resetar Base</button>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-1">
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative">
-                            <h2 class="text-lg font-medium mb-2 text-white" x-text="editandoIndex !== null ? '✏️ Editando Máquina' : 'Catalogar Nova Moto'"></h2>
-                            <p class="text-xs text-gray-500 mb-6">Insira os detalhes e adicione uma foto atrativa.</p>
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                    <div class="xl:col-span-1">
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative shadow-lg">
+                            <div class="flex items-center gap-2 mb-6">
+                                <div class="w-1 h-4 bg-premium-honda rounded-full"></div>
+                                <h2 class="text-sm font-bold text-white uppercase tracking-wider" x-text="editandoIndex !== null ? 'Modo de Edição' : 'Nova Máquina'"></h2>
+                            </div>
                             
                             <form @submit.prevent="cadastrarMoto" class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Foto da Moto</label>
-                                    <div class="relative w-full h-32 bg-premium-dark border border-dashed border-premium-border rounded-lg flex items-center justify-center overflow-hidden group cursor-pointer">
+                                    <div class="relative w-full h-36 bg-[#0F0F0F] hover:bg-[#151515] border border-dashed border-gray-700 rounded-xl flex items-center justify-center overflow-hidden group cursor-pointer transition-colors">
                                         <input type="file" accept="image/*" @change="processarFoto" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
                                         
                                         <template x-if="novaMoto.foto">
                                             <img :src="novaMoto.foto" class="w-full h-full object-cover">
                                         </template>
                                         <template x-if="!novaMoto.foto">
-                                            <div class="text-center group-hover:text-premium-honda transition-colors">
-                                                <svg class="w-8 h-8 mx-auto text-gray-600 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                                <span class="text-xs text-gray-500 font-medium">Clique para Enviar</span>
+                                            <div class="text-center group-hover:scale-105 transition-transform duration-300">
+                                                <svg class="w-8 h-8 mx-auto text-premium-gray mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                <span class="text-[11px] text-gray-400 font-medium tracking-wide uppercase">Adicionar Foto</span>
                                             </div>
                                         </template>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Modelo Exato</label>
-                                    <input type="text" x-model="novaMoto.modelo" placeholder="Ex: Titan 160 S" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
-                                </div>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Ano</label>
-                                        <input type="number" x-model="novaMoto.ano" placeholder="2024" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                                    <div class="col-span-2">
+                                        <input type="text" x-model="novaMoto.modelo" placeholder="Modelo (Ex: Titan S)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Preço (R$)</label>
-                                        <input type="text" x-model="novaMoto.preco" placeholder="18.500" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                                        <input type="number" x-model="novaMoto.cilindrada" placeholder="Cilindrada (Ex: 160)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                    </div>
+                                    <div>
+                                        <input type="number" x-model="novaMoto.ano" placeholder="Ano (Ex: 2024)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                    </div>
+                                    <div>
+                                        <input type="text" x-model="novaMoto.cor" placeholder="Cor (Ex: Vermelha)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                    </div>
+                                    <div>
+                                        <input type="number" x-model="novaMoto.km" placeholder="KM (0 p/ Nova)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
+                                    </div>
+                                    <div>
+                                        <input type="text" x-model="novaMoto.placa" placeholder="Placa (Ex: ABC-1234)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all uppercase">
+                                    </div>
+                                    <div>
+                                        <input type="text" x-model="novaMoto.preco" placeholder="Preço (Ex: 18.500)" required class="w-full bg-[#0F0F0F] border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda focus:ring-1 focus:ring-premium-honda text-white transition-all">
                                     </div>
                                 </div>
-                                <div class="flex gap-2 mt-4">
-                                    <button type="submit" class="flex-1 bg-white text-black font-semibold rounded-lg px-4 py-3 text-sm hover:bg-gray-200 transition-colors" x-text="editandoIndex !== null ? 'Salvar Edição' : 'Sincronizar Estoque'"></button>
-                                    <button type="button" x-show="editandoIndex !== null" @click="cancelarEdicao" class="bg-premium-dark border border-premium-border text-white rounded-lg px-4 py-3 text-sm hover:bg-gray-800 transition-colors">Cancelar</button>
+
+                                <div class="pt-4 border-t border-premium-border flex gap-2">
+                                    <button type="submit" class="flex-1 bg-white text-black font-semibold rounded-lg py-2.5 text-xs tracking-wide uppercase hover:bg-gray-200 transition-colors" x-text="editandoIndex !== null ? 'Salvar Alterações' : 'Adicionar ao Estoque'"></button>
+                                    <button type="button" x-show="editandoIndex !== null" @click="cancelarEdicao" class="bg-transparent border border-gray-600 text-gray-400 rounded-lg px-4 py-2.5 text-xs uppercase tracking-wide hover:bg-gray-800 transition-colors">Cancelar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
 
-                    <div class="lg:col-span-2">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="xl:col-span-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <template x-for="(moto, index) in motosEstoque" :key="index">
-                                <div class="bg-premium-panel border border-premium-border rounded-xl p-5 flex flex-col justify-between hover:border-white/20 transition-colors">
-                                    <div>
-                                        <div class="w-full h-40 bg-premium-dark rounded-lg mb-4 overflow-hidden border border-premium-border flex items-center justify-center">
-                                            <template x-if="moto.foto">
-                                                <img :src="moto.foto" class="w-full h-full object-cover">
-                                            </template>
-                                            <template x-if="!moto.foto">
-                                                <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                            </template>
-                                        </div>
-
-                                        <div class="flex justify-between items-start mb-2">
-                                            <h3 class="text-base font-semibold text-white truncate pr-2" x-text="moto.modelo"></h3>
-                                            <span class="bg-premium-dark border border-premium-border text-[10px] text-gray-400 px-2 py-0.5 rounded" x-text="moto.ano"></span>
-                                        </div>
-                                        <p class="text-xl font-light text-white mb-4">R$ <span x-text="moto.preco"></span></p>
-                                    </div>
+                                <div class="bg-premium-dark border border-premium-border rounded-2xl overflow-hidden flex flex-col group hover:border-gray-600 transition-all duration-300 shadow-lg">
                                     
-                                    <div class="pt-3 border-t border-premium-border flex flex-col gap-3">
-                                        <div class="flex justify-between items-center">
-                                            <span class="text-[10px] text-green-500 bg-green-500/10 px-2 py-1 rounded">Disponível</span>
-                                            <button @click="editarMoto(index)" class="text-[10px] text-blue-400 hover:text-blue-300 uppercase font-bold tracking-wider">✏️ Editar</button>
+                                    <div class="relative h-44 w-full bg-[#0A0A0A] flex items-center justify-center overflow-hidden border-b border-premium-border">
+                                        <template x-if="moto.foto">
+                                            <img :src="moto.foto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                        </template>
+                                        <template x-if="!moto.foto">
+                                            <svg class="w-12 h-12 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                        </template>
+                                        
+                                        <div class="absolute top-3 left-3 bg-green-500/90 backdrop-blur-sm text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded">Disponível</div>
+                                        <button @click="editarMoto(index)" class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white p-1.5 rounded hover:bg-blue-500 transition-colors" title="Editar">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        </button>
+                                    </div>
+
+                                    <div class="p-5 flex-1 flex flex-col">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-lg font-bold text-white truncate pr-2" x-text="moto.modelo"></h3>
+                                            <span class="text-premium-honda font-black text-sm" x-text="moto.cilindrada + 'cc'"></span>
                                         </div>
                                         
-                                        <div class="flex gap-2 mt-1">
-                                            <button @click="venderMoto(index)" class="flex-1 bg-green-500/10 border border-green-500/20 text-green-500 hover:bg-green-500 hover:text-white px-2 py-2 rounded text-xs font-medium transition-colors">
-                                                ✅ Vendida
+                                        <div class="flex flex-wrap gap-1.5 mb-5 mt-1">
+                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium" x-text="moto.ano"></span>
+                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
+                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium capitalize" x-text="moto.cor"></span>
+                                            <span class="bg-premium-panel border border-premium-border text-gray-400 text-[10px] px-2 py-0.5 rounded-md font-medium uppercase tracking-wider" x-text="moto.placa"></span>
+                                        </div>
+                                        
+                                        <div class="mt-auto mb-4">
+                                            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-widest mb-0.5">Valor à vista</p>
+                                            <p class="text-2xl font-light text-white tracking-tight">R$ <span x-text="moto.preco"></span></p>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-2 pt-4 border-t border-premium-border">
+                                            <button @click="venderMoto(index)" class="flex items-center justify-center gap-1.5 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Vendida
                                             </button>
-                                            <button @click="excluirErro(index)" class="flex-1 bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-2 py-2 rounded text-xs font-medium transition-colors">
-                                                🗑️ Errada
+                                            <button @click="excluirErro(index)" class="flex items-center justify-center gap-1.5 bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-all">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                Errada
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </template>
                             
-                            <div x-show="motosEstoque.length === 0" class="col-span-full py-12 text-center border border-dashed border-premium-border rounded-xl">
-                                <p class="text-premium-gray text-sm">O estoque está vazio. Comece a catalogar suas máquinas!</p>
+                            <div x-show="motosEstoque.length === 0" class="col-span-full py-16 text-center border-2 border-dashed border-gray-800 rounded-2xl flex flex-col items-center justify-center">
+                                <svg class="w-12 h-12 text-gray-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                <p class="text-gray-400 text-sm font-medium">Sua vitrine está vazia.</p>
+                                <p class="text-gray-600 text-xs mt-1">Cadastre as máquinas para iniciar as vendas.</p>
                             </div>
                         </div>
                     </div>
@@ -346,10 +371,12 @@
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
                 
-                novaMoto: { modelo: '', ano: '', preco: '', foto: '' },
+                // MÁGICA: Estrutura da moto atualizada com os novos campos
+                novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', foto: '' },
                 
-                // MÁGICA: Puxando o Estoque e o Ranking da memória do navegador para sobreviver ao F5
-                motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [],
+                motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [
+                    { modelo: 'CB 300F Twister ABS', cilindrada: '300', ano: '2024', preco: '22.500', km: '0', cor: 'Vermelha', placa: '0KM', foto: '' }
+                ],
                 
                 ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
                     { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
@@ -402,16 +429,14 @@
 
                 cadastrarMoto() {
                     if(this.editandoIndex !== null) {
-                        // Salvando a Edição
                         this.motosEstoque[this.editandoIndex] = { ...this.novaMoto };
                         this.editandoIndex = null;
                         alert('Máquina atualizada com sucesso!');
                     } else {
-                        // Cadastrando Nova
                         this.motosEstoque.unshift({ ...this.novaMoto });
-                        alert('Máquina catalogada com foto!');
+                        alert('Máquina catalogada na vitrine!');
                     }
-                    this.novaMoto = { modelo: '', ano: '', preco: '', foto: '' };
+                    this.novaMoto = { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', foto: '' };
                     this.salvarDadosLocais();
                 },
                 
@@ -422,35 +447,32 @@
                 },
 
                 cancelarEdicao() {
-                    this.novaMoto = { modelo: '', ano: '', preco: '', foto: '' };
+                    this.novaMoto = { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', foto: '' };
                     this.editandoIndex = null;
                 },
 
                 venderMoto(index) {
-                    // Pulo do Gato: Soma +1 no ranking do Gustavo!
                     let gustavo = this.ranking.find(v => v.nome === 'Gustavo');
                     if(gustavo) {
                         gustavo.vendas += 1;
                     }
-                    // Reordena o ranking para o maior ficar no topo
                     this.ranking.sort((a, b) => b.vendas - a.vendas);
                     
-                    // Remove a moto do estoque
                     this.motosEstoque.splice(index, 1);
                     this.salvarDadosLocais();
                     
-                    alert('Venda Confirmada! Você acabou de subir no Ranking da Loja 🏆');
+                    alert('Venda Confirmada! O painel acaba de atualizar o Ranking da Loja 🏆');
                 },
 
                 excluirErro(index) {
-                    if(confirm('Tem certeza que deseja apagar esse anúncio sem contabilizar venda?')) {
+                    if(confirm('Apagar registro incorreto? (Isso não contará como venda)')) {
                         this.motosEstoque.splice(index, 1);
                         this.salvarDadosLocais();
                     }
                 },
 
                 resetarEstoque() {
-                    if(confirm('ATENÇÃO: Isso vai limpar TODO o seu estoque de testes. Deseja continuar?')) {
+                    if(confirm('Isso vai esvaziar sua vitrine de testes. Deseja continuar?')) {
                         this.motosEstoque = [];
                         this.salvarDadosLocais();
                     }
