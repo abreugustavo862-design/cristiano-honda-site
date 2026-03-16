@@ -12,7 +12,8 @@
     <script>
         const supabaseUrl = 'https://uskuxnireyjvldgvngzq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza3V4bmlyZXlqdmxkZ3ZuZ3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzkyODYsImV4cCI6MjA4OTI1NTI4Nn0.X-6a0ZBPuL0CLC8tSrSNJn8UrOemGhse4IAfetKvLGc';
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        // CORREÇÃO CIRÚRGICA 1: Usando window.banco
+        window.banco = window.supabase.createClient(supabaseUrl, supabaseKey);
     </script>
     
     <script>
@@ -283,7 +284,6 @@
     </main>
 
     <script>
-       <script>
         function arkheCrm() {
             return {
                 rotaAtiva: 'dashboard',
@@ -357,6 +357,6 @@
             }
         }
     </script>
-<script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
