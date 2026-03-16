@@ -143,6 +143,8 @@
 
             <div 
                 x-data="{
+                    // MÁGICA: Lê o vendedor da URL automaticamente
+                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || '',
                     nome: '',
                     modelo: '',
                     parcela: '',
@@ -168,7 +170,8 @@
                                 nome: this.nome,
                                 moto: 'Consórcio: ' + this.modelo + ' (' + this.prazo + 'x)',
                                 telefone: 'Aguardando Contato', // Como o Consórcio não pede telefone, deixamos assim
-                                status: 'Análise'
+                                status: 'Análise',
+                                vendedor: this.vendedorDaUrl // A etiqueta da comissão!
                             }]);
                         } catch (e) {
                             console.error('Erro ao salvar no banco', e);
@@ -357,8 +360,8 @@
                         </button>
                     </div>
 
-                    <button @click="openMenu = !openMenu" class="w-full inline-flex items-center justify-center gap-3 bg-premium-honda text-white text-base font-medium py-4 px-8 rounded-full hover:bg-red-800 hover:scale-105 transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(228,0,43,0.6)] outline-none">
-                        Escolher Especialista e Enviar
+                    <button @click="openMenu = !openMenu" class="w-full inline-flex items-center justify-center gap-3 bg-premium-dark text-white text-base font-medium py-4 px-8 rounded-full hover:bg-black hover:scale-105 transition-all duration-300 shadow-xl outline-none mt-4">
+                        Enviar Ficha para Aprovação
                         <svg class="w-5 h-5 transition-transform duration-300" :class="{'rotate-180': openMenu}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                     </button>
                     
@@ -368,14 +371,14 @@
         </div>
     </section>
 
-    <footer class="bg-premium-dark text-white pt-16 pb-8 border-t border-white/10">
+    <footer class="bg-premium-dark text-white pt-16 pb-8 border-t border-white/10 mt-10">
         <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
             <h2 class="text-2xl font-light tracking-tight mb-4 uppercase">
                 Cristiano <span class="font-bold text-premium-honda">Honda</span>
             </h2>
             <div class="pt-8 border-t border-white/10 flex flex-col items-center gap-2">
                 <p class="text-gray-500 text-xs font-light tracking-wide">&copy; 2026 Cristiano Honda. Todos os direitos reservados.</p>
-                <p class="text-gray-500 text-xs font-light tracking-wide">Desenvolvido por <a href="#" class="text-white hover:text-premium-honda">Arkhe Tech</a></p>
+                <p class="text-gray-500 text-xs font-light tracking-wide">Desenvolvido por <a href="#" class="text-white hover:text-premium-honda transition-colors">Arkhe Tech</a></p>
             </div>
         </div>
     </footer>
@@ -384,6 +387,6 @@
     <script>
         AOS.init({ once: true, offset: 50 });
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
