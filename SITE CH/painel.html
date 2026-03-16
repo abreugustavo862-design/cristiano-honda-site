@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arkhe CRM | Cristiano Honda</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], },
+                    colors: { premium: { dark: '#0A0A0A', panel: '#121212', border: '#262626', honda: '#E4002B', gray: '#888888' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0A0A0A; color: #FFFFFF; overflow: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="antialiased h-screen flex" x-data="arkheCrm()">
+
+    <aside class="w-64 bg-premium-panel border-r border-premium-border flex flex-col hidden md:flex">
+        
+        <div class="h-20 flex items-center px-6 border-b border-premium-border">
+            <h1 class="text-xl font-bold tracking-tight">Arkhe<span class="text-premium-honda font-light">CRM</span></h1>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-2">
+            <p class="px-2 text-[10px] font-semibold text-premium-gray uppercase tracking-widest mb-4">Gestão Comercial</p>
+            
+            <button @click="rotaAtiva = 'dashboard'" :class="rotaAtiva === 'dashboard' ? 'bg-white/10 text-white' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                Visão Geral
+            </button>
+
+            <button @click="rotaAtiva = 'leads'" :class="rotaAtiva === 'leads' ? 'bg-premium-honda text-white shadow-[0_0_15px_rgba(228,0,43,0.3)]' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    Meus Leads
+                </div>
+                <span class="bg-premium-dark text-xs px-2 py-0.5 rounded-md border border-premium-border" x-text="leads.length"></span>
+            </button>
+
+            <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-white/10 text-white' : 'text-premium-gray hover:bg-white/5 hover:text-white'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors mt-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                Estoque da Loja
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-premium-border">
+            <div class="flex items-center gap-3 bg-premium-dark p-3 rounded-xl border border-premium-border">
+                <div class="w-8 h-8 bg-gradient-to-br from-premium-honda to-red-900 rounded-full flex items-center justify-center font-bold text-xs">G</div>
+                <div class="flex-1 overflow-hidden">
+                    <p class="text-sm font-medium text-white truncate">Gustavo</p>
+                    <p class="text-[10px] text-premium-gray truncate">Consultor Premium</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden bg-premium-dark">
+        
+        <header class="h-20 bg-premium-panel/50 backdrop-blur-md border-b border-premium-border flex items-center justify-between px-8">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-medium" x-text="tituloPagina()"></h2>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button @click="copiarLink()" class="flex items-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 px-4 py-2 rounded-lg text-sm font-medium transition-colors group">
+                    <span class="text-premium-gray group-hover:text-white transition-colors">Meu Link:</span>
+                    <span class="text-white truncate w-32" x-text="meuLink"></span>
+                    <svg class="w-4 h-4 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+                <a href="index.html" class="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Sair</a>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
+            
+            <div x-show="rotaAtiva === 'dashboard'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Total de Leads</p>
+                        <p class="text-4xl font-light text-white" x-text="leads.length"></p>
+                    </div>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-500/10 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Em Análise</p>
+                        <p class="text-4xl font-light text-yellow-500" x-text="leads.filter(l => l.status === 'Análise').length"></p>
+                    </div>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-green-500/10 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Aprovados</p>
+                        <p class="text-4xl font-light text-green-500" x-text="leads.filter(l => l.status === 'Aprovado').length"></p>
+                    </div>
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden border-b-4 border-b-premium-honda">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-premium-honda/10 rounded-bl-full -z-10"></div>
+                        <p class="text-premium-gray text-xs uppercase tracking-widest mb-2">Vendas Fechadas</p>
+                        <p class="text-4xl font-semibold text-white">08</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl p-6">
+                        <h3 class="text-lg font-medium mb-6 flex items-center justify-between">
+                            Ranking da Loja 🏆
+                            <span class="text-[10px] bg-white/5 border border-white/10 px-2 py-1 rounded text-premium-gray">Atualizado Agora</span>
+                        </h3>
+                        <div class="space-y-3">
+                            <template x-for="(vendedor, index) in ranking.slice(0,5)" :key="index">
+                                <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-premium-border hover:bg-premium-dark transition-colors" :class="index === 0 ? 'bg-gradient-to-r from-yellow-500/5 to-transparent border-l-2 border-l-yellow-500' : ''">
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-gray-500 font-bold w-4 text-center" x-text="index + 1"></span>
+                                        <div class="w-8 h-8 rounded-full bg-premium-border flex items-center justify-center text-xs text-white" x-text="vendedor.nome.charAt(0)"></div>
+                                        <p class="text-sm font-medium text-white">
+                                            <span x-text="vendedor.nome"></span>
+                                            <span x-show="vendedor.nome === 'Gustavo'" class="text-[10px] text-premium-honda ml-2 bg-premium-honda/10 px-2 py-0.5 rounded">Você</span>
+                                        </p>
+                                    </div>
+                                    <div class="text-sm font-bold text-white"><span x-text="vendedor.vendas"></span> <span class="text-[10px] text-gray-500 font-normal">Motos</span></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-premium-panel to-black border border-premium-border rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden">
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-premium-honda/20 blur-3xl rounded-full"></div>
+                        <h3 class="text-2xl font-light mb-2">Bem-vindo ao futuro da <span class="font-semibold text-premium-honda">Venda Digital.</span></h3>
+                        <p class="text-premium-gray text-sm leading-relaxed mb-6">
+                            Você não precisa mais usar caderninhos. Cadastre seus clientes, acompanhe suas aprovações e bata suas metas. O sistema trabalha para você.
+                        </p>
+                        <button @click="rotaAtiva = 'leads'" class="bg-white text-black font-semibold px-6 py-3 rounded-lg text-sm w-max hover:bg-gray-200 transition-colors">
+                            Acessar Meus Leads
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div x-show="rotaAtiva === 'leads'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                
+                <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-xl">
+                    <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Nome do Cliente</label>
+                            <input type="text" x-model="novoLead.nome" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Interesse (Moto)</label>
+                            <input type="text" x-model="novoLead.moto" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                        </div>
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">WhatsApp</label>
+                            <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-3 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                        </div>
+                        <button type="submit" class="bg-premium-honda text-white font-medium rounded-lg px-8 py-3 text-sm hover:bg-red-800 transition-colors w-full md:w-auto">
+                            Salvar Ficha
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-premium-panel border border-premium-border rounded-2xl overflow-hidden">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-premium-dark/50 border-b border-premium-border">
+                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Cliente</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Máquina Desejada</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Data</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest">Status / Funil</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-premium-gray uppercase tracking-widest text-right">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(lead, index) in leads" :key="index">
+                                <tr class="border-b border-premium-border hover:bg-white/[0.02] transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-premium-border flex items-center justify-center text-xs font-bold text-gray-400" x-text="lead.nome.charAt(0)"></div>
+                                            <div>
+                                                <p class="text-sm font-medium text-white" x-text="lead.nome"></p>
+                                                <p class="text-[11px] text-gray-500" x-text="lead.telefone"></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-300" x-text="lead.moto"></td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Hoje</td>
+                                    <td class="px-6 py-4">
+                                        <select x-model="lead.status" class="text-xs font-semibold px-3 py-1.5 rounded-md outline-none appearance-none cursor-pointer border border-transparent transition-colors"
+                                            :class="{'bg-yellow-500/10 text-yellow-500 border-yellow-500/20': lead.status === 'Análise', 'bg-green-500/10 text-green-500 border-green-500/20': lead.status === 'Aprovado', 'bg-red-500/10 text-red-500 border-red-500/20': lead.status === 'Reprovado', 'bg-blue-500/10 text-blue-500 border-blue-500/20': lead.status === 'Vendido'}">
+                                            <option value="Análise" class="bg-premium-panel text-white">⏳ Em Análise</option>
+                                            <option value="Aprovado" class="bg-premium-panel text-white">✅ Aprovado</option>
+                                            <option value="Reprovado" class="bg-premium-panel text-white">❌ Reprovado</option>
+                                            <option value="Vendido" class="bg-premium-panel text-white">🏆 Vendido</option>
+                                        </select>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a :href="'https://wa.me/55' + lead.telefone.replace(/\D/g,'')" target="_blank" class="inline-flex items-center gap-1.5 bg-[#25D366]/10 text-[#25D366] hover:bg-[#25D366] hover:text-white px-3 py-1.5 rounded-md text-xs font-medium transition-colors">
+                                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                                            Chamar
+                                        </a>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr x-show="leads.length === 0">
+                                <td colspan="5" class="px-6 py-12 text-center text-premium-gray text-sm">Nenhum lead cadastrado ainda. Compartilhe seu link!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-1">
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6">
+                            <h2 class="text-lg font-medium mb-2 text-white">Catalogar Moto</h2>
+                            <p class="text-xs text-gray-500 mb-6">Ao salvar, o veículo será enviado para o banco de dados da loja.</p>
+                            
+                            <form @submit.prevent="cadastrarMoto" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Modelo Exato</label>
+                                    <input type="text" x-model="novaMoto.modelo" placeholder="Ex: Titan 160 S" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Ano</label>
+                                        <input type="number" x-model="novaMoto.ano" placeholder="2024" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Preço (R$)</label>
+                                        <input type="text" x-model="novaMoto.preco" placeholder="18.500" required class="w-full bg-premium-dark border border-premium-border rounded-lg px-4 py-2.5 text-sm outline-none focus:border-premium-honda text-white transition-colors">
+                                    </div>
+                                </div>
+                                <button type="submit" class="w-full bg-white text-black font-semibold rounded-lg px-4 py-3 mt-4 text-sm hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                                    Sincronizar Estoque
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <template x-for="(moto, index) in motosEstoque" :key="index">
+                                <div class="bg-premium-panel border border-premium-border rounded-xl p-5 flex flex-col justify-between hover:border-white/20 transition-colors">
+                                    <div>
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="text-base font-semibold text-white truncate pr-2" x-text="moto.modelo"></h3>
+                                            <span class="bg-premium-dark border border-premium-border text-[10px] text-gray-400 px-2 py-0.5 rounded" x-text="moto.ano"></span>
+                                        </div>
+                                        <p class="text-xl font-light text-white mb-4">R$ <span x-text="moto.preco"></span></p>
+                                    </div>
+                                    <div class="flex justify-between items-center pt-3 border-t border-premium-border">
+                                        <span class="text-[10px] text-green-500 bg-green-500/10 px-2 py-1 rounded">Disponível</span>
+                                        <button @click="removerMoto(index)" class="text-[10px] text-red-500 hover:text-red-400 uppercase font-bold tracking-wider">Deletar</button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function arkheCrm() {
+            return {
+                rotaAtiva: 'dashboard',
+                meuLink: 'cristianohonda.com/zap/gustavo',
+                
+                tituloPagina() {
+                    if(this.rotaAtiva === 'dashboard') return 'Visão Geral';
+                    if(this.rotaAtiva === 'leads') return 'Gestão de Clientes';
+                    if(this.rotaAtiva === 'estoque') return 'Controle de Estoque';
+                },
+
+                novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
+                
+                // MÁGICA: Puxa os leads que o cliente preencheu lá no simulacao.html
+                leads: JSON.parse(localStorage.getItem('arkhe_leads')) || [
+                    { nome: 'Carlos Mendonça', moto: 'XRE 190 2024', telefone: '(31) 98888-1111', status: 'Aprovado' },
+                    { nome: 'Mariana Silva', moto: 'Biz 125 Branca', telefone: '(31) 97777-2222', status: 'Análise' }
+                ],
+                
+                novaMoto: { modelo: '', ano: '', preco: '' },
+                motosEstoque: [
+                    { modelo: 'CB 300F Twister ABS', ano: '2024', preco: '22.500' },
+                    { modelo: 'Sahara 300 Rally', ano: '2025', preco: '34.900' }
+                ],
+                
+                ranking: [
+                    { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
+                    { nome: 'Gustavo', vendas: 8 }, { nome: 'Nathan', vendas: 7 },
+                    { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
+                ],
+
+                adicionarLead() {
+                    this.leads.unshift({ ...this.novoLead });
+                    // Salva na memória para não sumir se atualizar a página
+                    localStorage.setItem('arkhe_leads', JSON.stringify(this.leads));
+                    this.novoLead = { nome: '', moto: '', telefone: '', status: 'Análise' };
+                },
+
+                atualizarStatus() {
+                    // Quando o vendedor mudar o select de "Análise" para "Aprovado", salva automaticamente
+                    localStorage.setItem('arkhe_leads', JSON.stringify(this.leads));
+                },
+
+                cadastrarMoto() {
+                    this.motosEstoque.unshift({ ...this.novaMoto });
+                    this.novaMoto = { modelo: '', ano: '', preco: '' };
+                    alert('Máquina catalogada e enviada para a vitrine pública!');
+                },
+                
+                removerMoto(index) { 
+                    this.motosEstoque.splice(index, 1); 
+                },
+                
+                copiarLink() {
+                    navigator.clipboard.writeText(this.meuLink);
+                    alert('Link copiado! Mande pro cliente preencher a ficha.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
