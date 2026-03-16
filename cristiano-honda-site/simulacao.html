@@ -127,6 +127,9 @@
             
             <div 
                 x-data="{
+                    // MÁGICA: Lê o vendedor da URL automaticamente
+                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || '',
+                    
                     // Condições
                     entrada: '', parcelas: '48',
                     // Dados Pessoais
@@ -150,13 +153,15 @@
                             return;
                         }
 
-                        // MÁGICA REAL: Enviando o Lead pro Supabase da Arkhe Tech
-await window.banco.from('leads').insert([{
-    nome: this.nomeCompleto,
-    moto: 'Financiamento (' + this.parcelas + 'x)',
-    telefone: this.celular || 'Sem número',
-    status: 'Análise'
-}]);
+                        // MÁGICA REAL: Enviando o Lead pro Supabase da Arkhe Tech com o dono da venda
+                        await window.banco.from('leads').insert([{
+                            nome: this.nomeCompleto,
+                            moto: 'Financiamento (' + this.parcelas + 'x)',
+                            telefone: this.celular || 'Sem número',
+                            status: 'Análise',
+                            vendedor: this.vendedorDaUrl
+                        }]);
+
                         let texto = `*FICHA CADASTRAL - FINANCIAMENTO SITE*%0A%0A`;
                         texto += `*🏁 CONDIÇÕES DESEJADAS*%0AEntrada: R$ ${this.entrada}%0AParcelas: ${this.parcelas}x%0A%0A`;
                         texto += `*👤 DADOS PESSOAIS*%0ANome: ${this.nomeCompleto}%0ACPF: ${this.cpf}%0ARG: ${this.rg}%0ANascimento: ${this.nascimento}%0AMãe: ${this.nomeMae}%0ACelular: ${this.celular}%0AEmail: ${this.email}%0A%0A`;
@@ -169,6 +174,7 @@ await window.banco.from('leads').insert([{
 
                         window.open(`https://wa.me/${telefone}?text=${texto}`, '_blank');
                     }
+                }"
                 class="bg-white rounded-3xl p-8 md:p-12 shadow-premium border border-gray-100"
                 data-aos="zoom-in"
                 data-aos-delay="200"
