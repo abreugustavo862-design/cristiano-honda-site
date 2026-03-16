@@ -469,6 +469,10 @@
                     this.tipoUsuario = tipo;
                     this.usuarioLogado = true;
                     this.senhaInput = ''; 
+                    
+                    // MÁGICA DO LINK: Cria o link exclusivo com HTTPS e o nome do vendedor!
+                    this.meuLink = `https://cristianohonda-site.vercel.app/simulacao.html?vendedor=${nome}`;
+                    
                     this.init(); // Atualiza os dados de leads do Supabase
                 },
                 
