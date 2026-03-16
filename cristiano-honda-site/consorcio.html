@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consórcio Nacional Honda | Cristiano Honda</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], },
+                    colors: {
+                        premium: { white: '#FFFFFF', offwhite: '#F5F5F7', lightgray: '#E8E8ED', gray: '#86868B', dark: '#1D1D1F', honda: '#E4002B' }
+                    },
+                    boxShadow: { 'premium': '0 20px 40px -15px rgba(0,0,0,0.05)', 'floating': '0 30px 60px -10px rgba(0,0,0,0.08)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #F5F5F7; color: #1D1D1F; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E8E8ED; border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased selection:bg-premium-dark selection:text-white">
+
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html">
+                        <img src="logoch.png" alt="Cristiano Honda" class="h-12 md:h-14 w-auto object-contain">
+                    </a>
+                </div>
+                <div class="hidden lg:flex space-x-6 xl:space-x-8 items-center">
+                    
+                    <a href="index.html#quem-somos" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Quem Somos Nós</a>
+                    <a href="estoque.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Estoque</a>
+                    <a href="simulacao.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Simulação</a>
+                    <a href="consorcio.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Consórcio</a>
+                    
+                    <a href="painel.html" class="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 hover:text-premium-honda transition-colors border-l border-gray-200 pl-6 xl:pl-8 ml-2 uppercase tracking-widest group">
+                        <svg class="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        Área VIP
+                    </a>
+                    
+                </div>
+    </nav>
+
+    <section class="pt-40 pb-20 bg-premium-dark text-white relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3c87?w=1200&auto=format&fit=crop" alt="Consórcio Fundo" class="w-full h-full object-cover opacity-20 mix-blend-luminosity">
+            <div class="absolute inset-0 bg-gradient-to-t from-premium-dark via-premium-dark/80 to-transparent"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10 text-center" data-aos="fade-up">
+            <span class="bg-premium-honda text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest inline-block mb-6">Investimento Inteligente</span>
+            <h1 class="text-5xl md:text-7xl font-light tracking-tight mb-6 leading-tight">
+                O poder de <span class="font-semibold text-white">Planejar.</span><br>
+                A certeza de <span class="font-semibold text-white">Conquistar.</span>
+            </h1>
+            <p class="text-xl text-gray-400 font-light max-w-2xl mx-auto mb-10">
+                Sem juros, sem burocracia e com a garantia direto da fábrica. O Consórcio Nacional Honda é o atalho financeiro para a sua próxima moto.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-24 bg-premium-offwhite">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-3xl p-10 shadow-premium hover:shadow-floating transition-all duration-500 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-14 h-14 bg-premium-offwhite rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-premium-dark mb-3">Zero Juros</h3>
+                    <p class="text-premium-gray font-light text-sm leading-relaxed">Diferente do financiamento tradicional, no consórcio você paga apenas uma pequena taxa de administração diluída no plano. Muito mais barato.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-10 shadow-premium hover:shadow-floating transition-all duration-500 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-14 h-14 bg-premium-offwhite rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-premium-dark mb-3">Flexibilidade de Prazos</h3>
+                    <p class="text-premium-gray font-light text-sm leading-relaxed">Planos estruturados de 12 até 80 meses. As parcelas se ajustam perfeitamente ao seu orçamento mensal, sem pesar no bolso.</p>
+                </div>
+
+                <div class="bg-white rounded-3xl p-10 shadow-premium hover:shadow-floating transition-all duration-500 hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-14 h-14 bg-premium-offwhite rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-7 h-7 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-medium text-premium-dark mb-3">Sorteio ou Lance</h3>
+                    <p class="text-premium-gray font-light text-sm leading-relaxed">Contemplações mensais por sorteio da Loteria Federal ou a opção de acelerar sua conquista ofertando lances fixos ou livres.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-12 bg-premium-offwhite">
+        <div class="max-w-5xl mx-auto px-6 lg:px-12" data-aos="zoom-in">
+            <div class="rounded-3xl overflow-hidden shadow-floating relative aspect-video bg-black flex items-center justify-center border-[8px] border-white group">
+                
+                <video 
+                    src="video-consorcio.mp4" 
+                    controls 
+                    class="w-full h-full object-cover" 
+                    poster="https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=1200&auto=format&fit=crop"
+                ></video>
+                
+            </div>
+            <p class="text-center text-premium-gray font-light mt-6 text-sm">Entenda como o Consórcio Nacional Honda garante sua moto sem juros.</p>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white border-t border-gray-100 relative overflow-hidden">
+        
+        <div class="absolute top-0 right-0 w-1/3 h-full bg-premium-offwhite/50 -skew-x-12 translate-x-16 -z-10"></div>
+
+        <div class="max-w-4xl mx-auto px-6 lg:px-12">
+            
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-light text-premium-dark mb-4">Desenhe o seu <span class="font-semibold">Plano.</span></h2>
+                <p class="text-premium-gray font-light text-sm max-w-2xl mx-auto">
+                    Preencha as informações abaixo. Escolha seu especialista e ele te chamará no WhatsApp com a cota exata para o seu perfil.
+                </p>
+            </div>
+
+            <div 
+                x-data="{
+                    nome: '',
+                    modelo: '',
+                    parcela: '',
+                    prazo: '48',
+                    tipoCota: 'Nova',
+                    openMenu: false,
+                    
+                    enviarLead(telefone) {
+                        if(this.nome.trim() === '') {
+                            alert('Por favor, informe seu nome antes de escolher o consultor.');
+                            this.openMenu = false;
+                            return;
+                        }
+                        if(this.modelo.trim() === '') {
+                            alert('Por favor, informe qual moto você procura.');
+                            this.openMenu = false;
+                            return;
+                        }
+                        
+                        const texto = `🏁 *NOVO LEAD DE CONSÓRCIO* 🏁%0A%0A*Nome:* ${this.nome}%0A*Moto de Interesse:* ${this.modelo}%0A*Parcela Ideal:* R$ ${this.parcela},00 / mês%0A*Prazo Desejado:* ${this.prazo} meses%0A*Tipo de Cota:* ${this.tipoCota}%0A%0A_Olá! Preenchi o formulário no site e aguardo as opções._`;
+                        
+                        window.open(`https://wa.me/${telefone}?text=${texto}`, '_blank');
+                    }
+                }"
+                class="bg-white rounded-3xl p-8 md:p-12 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] border border-gray-100 relative z-10 flex flex-col items-center"
+                data-aos="zoom-in"
+                data-aos-delay="100"
+            >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-12">
+                    
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Seu Nome</label>
+                        <input type="text" x-model="nome" placeholder="Como devemos te chamar?" class="w-full bg-premium-offwhite border border-gray-200 text-premium-dark rounded-xl px-4 py-3.5 outline-none focus:border-premium-honda focus:bg-white transition-all text-sm font-medium">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Máquina Desejada</label>
+                        <input type="text" x-model="modelo" placeholder="Ex: Titan 160, XRE, etc." class="w-full bg-premium-offwhite border border-gray-200 text-premium-dark rounded-xl px-4 py-3.5 outline-none focus:border-premium-honda focus:bg-white transition-all text-sm font-medium">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Status da Cota</label>
+                        <select x-model="tipoCota" class="w-full bg-premium-offwhite border border-gray-200 text-premium-dark rounded-xl px-4 py-3.5 outline-none focus:border-premium-honda focus:bg-white transition-all text-sm font-medium appearance-none cursor-pointer">
+                            <option value="Nova (Iniciar do Zero)">Nova (Iniciar do Zero)</option>
+                            <option value="Em Andamento">Em Andamento (Mais fácil de contemplar)</option>
+                        </select>
+                        <p class="text-[10px] text-premium-honda mt-1.5 font-medium ml-1">*Dica: Cotas em andamento possuem grupos mais maduros.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Parcela Aproximada</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">R$</span>
+                            <input type="number" x-model="parcela" placeholder="Ex: 400" class="w-full bg-premium-offwhite border border-gray-200 text-premium-dark rounded-xl pl-10 pr-4 py-3.5 outline-none focus:border-premium-honda focus:bg-white transition-all text-sm font-medium">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Prazo Desejado</label>
+                        <div class="relative">
+                            <select x-model="prazo" class="w-full bg-premium-offwhite border border-gray-200 text-premium-dark rounded-xl px-4 py-3.5 outline-none focus:border-premium-honda focus:bg-white transition-all text-sm font-medium appearance-none cursor-pointer">
+                                <option value="12">12 Meses</option>
+                                <option value="24">24 Meses</option>
+                                <option value="36">36 Meses</option>
+                                <option value="48">48 Meses</option>
+                                <option value="60">60 Meses</option>
+                                <option value="72">72 Meses</option>
+                                <option value="80">80 Meses</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="relative inline-flex flex-col items-center w-full max-w-sm">
+                    
+                    <div 
+                        x-show="openMenu" 
+                        @click.away="openMenu = false"
+                        x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave="transition ease-in duration-200"
+                        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+                        class="absolute bottom-full mb-4 w-full bg-white rounded-3xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.2)] border border-gray-100 p-2 z-50 max-h-[350px] overflow-y-auto"
+                        style="display: none;"
+                    >
+                        <p class="text-xs font-semibold text-premium-gray uppercase tracking-widest mb-2 mt-2 px-2 sticky top-0 bg-white z-10 py-1">Selecione para Enviar</p>
+                        
+                        <button @click="enviarLead('5531998303054')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-cristiano.jpg" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Cristiano</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531999976103')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-nathan.jpg" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Nathan</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531996719737')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-samuel.jpg" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Samuel</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531995280992')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-gustavo.jpg" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Gustavo</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-kawhan.jpg" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Kawhan</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-moises.jpg" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Moises</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-avelar.jpg" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Avelar</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                        <div class="h-px w-full bg-gray-50 my-0.5"></div>
+
+                        <button @click="enviarLead('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
+                            <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                                <img src="foto-ronan.jpg" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                            </div>
+                            <div class="text-left flex-1">
+                                <h4 class="text-premium-dark font-medium text-sm">Ronan</h4>
+                                <p class="text-premium-gray text-xs font-light">Consultor Especialista</p>
+                            </div>
+                            <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                                <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                            </div>
+                        </button>
+                    </div>
+
+                    <button @click="openMenu = !openMenu" class="w-full inline-flex items-center justify-center gap-3 bg-premium-honda text-white text-base font-medium py-4 px-8 rounded-full hover:bg-red-800 hover:scale-105 transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(228,0,43,0.6)] outline-none">
+                        Escolher Especialista e Enviar
+                        <svg class="w-5 h-5 transition-transform duration-300" :class="{'rotate-180': openMenu}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                    </button>
+                    
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-premium-dark text-white pt-16 pb-8 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+            <h2 class="text-2xl font-light tracking-tight mb-4 uppercase">
+                Cristiano <span class="font-bold text-premium-honda">Honda</span>
+            </h2>
+            <div class="pt-8 border-t border-white/10 flex flex-col items-center gap-2">
+                <p class="text-gray-500 text-xs font-light tracking-wide">&copy; 2026 Cristiano Honda. Todos os direitos reservados.</p>
+                <p class="text-gray-500 text-xs font-light tracking-wide">Desenvolvido por <a href="#" class="text-white hover:text-premium-honda">Arkhe Tech</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50 });
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
