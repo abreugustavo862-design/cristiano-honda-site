@@ -42,23 +42,36 @@
 <body class="antialiased h-screen flex relative" x-data="arkheCrm()">
 
     <div x-show="!usuarioLogado" x-transition.opacity.duration.500ms class="absolute inset-0 z-50 bg-premium-bg flex flex-col items-center justify-center p-6">
-        <div class="w-full max-w-md bg-white rounded-3xl p-10 shadow-xl border border-slate-100 text-center">
+        <div class="w-full max-w-sm bg-white rounded-3xl p-10 shadow-xl border border-slate-100 text-center">
             <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <svg class="w-8 h-8 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
             <h1 class="text-2xl font-black text-premium-text mb-2">Arkhe<span class="font-light text-premium-honda">CRM</span></h1>
-            <p class="text-premium-muted text-sm font-medium mb-8">Acesso restrito à equipe Cristiano Honda.</p>
+            <p class="text-premium-muted text-sm font-medium mb-8">Acesso exclusivo da equipe.</p>
             
-            <div class="space-y-3">
-                <button @click="fazerLogin('Gustavo', 'Vendedor')" class="w-full bg-slate-50 hover:bg-premium-nivus hover:text-white border border-slate-200 text-slate-700 font-bold py-4 rounded-xl transition-all group relative overflow-hidden">
-                    <span class="relative z-10">Entrar como Gustavo (Vendedor)</span>
-                </button>
-                <button @click="fazerLogin('Cristiano', 'Diretor')" class="w-full bg-slate-50 hover:bg-slate-800 hover:text-white border border-slate-200 text-slate-700 font-bold py-4 rounded-xl transition-all">
-                    Entrar como Cristiano (Diretoria)
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Usuário</label>
+                    <div class="relative">
+                        <select x-model="usuarioInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all font-bold appearance-none cursor-pointer">
+                            <option value="" disabled selected>Selecione seu nome</option>
+                            <template x-for="u in usuariosPermitidos" :key="u.nome">
+                                <option :value="u.nome" x-text="u.nome"></option>
+                            </template>
+                        </select>
+                        <svg class="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">PIN de Acesso (4 Dígitos)</label>
+                    <input type="password" x-model="senhaInput" placeholder="••••" maxlength="4" @keyup.enter="efetuarLogin()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-lg outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all font-black text-center tracking-[1em]">
+                </div>
+                <button @click="efetuarLogin()" class="w-full bg-premium-nivus hover:bg-blue-600 text-white font-bold tracking-widest uppercase text-sm py-4 rounded-xl transition-all shadow-md mt-4">
+                    Entrar no Sistema
                 </button>
             </div>
         </div>
-        <p class="mt-8 text-xs text-premium-muted font-medium">Desenvolvido por Arkhe Tech</p>
+        <p class="mt-8 text-xs text-premium-muted font-medium">Desenvolvido por <span class="font-bold">Arkhe Tech</span></p>
     </div>
 
     <div x-show="usuarioLogado" class="flex w-full h-full relative" x-cloak>
@@ -80,7 +93,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></span>
                     </div>
-                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md" x-text="leads.length"></span>
+                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="getLeadsFiltrados().length"></span>
                 </button>
 
                 <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mt-2">
@@ -124,17 +137,17 @@
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></p>
-                            <p class="text-4xl font-light text-premium-text" x-text="leads.length"></p>
+                            <p class="text-4xl font-light text-premium-text" x-text="getLeadsFiltrados().length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Em Análise</p>
-                            <p class="text-4xl font-light text-yellow-600" x-text="leads.filter(l => l.status === 'Análise').length"></p>
+                            <p class="text-4xl font-light text-yellow-600" x-text="getLeadsFiltrados().filter(l => l.status === 'Análise').length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Aprovados</p>
-                            <p class="text-4xl font-light text-green-600" x-text="leads.filter(l => l.status === 'Aprovado').length"></p>
+                            <p class="text-4xl font-light text-green-600" x-text="getLeadsFiltrados().filter(l => l.status === 'Aprovado').length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
@@ -186,6 +199,7 @@
                 </div>
 
                 <div x-show="rotaAtiva === 'leads'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                    
                     <div x-show="tipoUsuario !== 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-sm">
                         <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end">
                             <div class="flex-1 w-full">
@@ -212,13 +226,13 @@
                                 <tr class="bg-slate-50 border-b border-premium-border">
                                     <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Cliente</th>
                                     <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Máquina Desejada</th>
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest" x-show="tipoUsuario === 'Diretor'">Responsável</th>
+                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest" x-show="tipoUsuario === 'Diretor'">Vendedor Responsável</th>
                                     <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Status / Funil</th>
                                     <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest text-right">Ação</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(lead, index) in leads" :key="index">
+                                <template x-for="(lead, index) in getLeadsFiltrados()" :key="index">
                                     <tr class="border-b border-premium-border hover:bg-slate-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-3">
@@ -232,7 +246,7 @@
                                         <td class="px-6 py-4 text-sm font-medium text-slate-700" x-text="lead.moto"></td>
                                         
                                         <td class="px-6 py-4 text-xs font-bold text-slate-500 uppercase" x-show="tipoUsuario === 'Diretor'">
-                                            <span class="bg-slate-100 border border-slate-200 px-2 py-1 rounded" x-text="index % 3 === 0 ? 'Gustavo' : (index % 3 === 1 ? 'Nathan' : 'Samuel')"></span>
+                                            <span class="bg-slate-100 border border-slate-200 px-2 py-1 rounded" x-text="lead.vendedor || 'Site / Geral'"></span>
                                         </td>
 
                                         <td class="px-6 py-4">
@@ -251,6 +265,9 @@
                                         </td>
                                     </tr>
                                 </template>
+                                <tr x-show="getLeadsFiltrados().length === 0">
+                                    <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-sm">Nenhum lead cadastrado ainda no seu painel. Compartilhe seu link para começar!</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -259,10 +276,8 @@
                 <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-premium-text">Vitrine <span class="font-light">Premium</span></h2>
-                        
                         <div class="flex gap-3">
                             <button @click="resetarEstoque()" x-show="tipoUsuario === 'Diretor'" class="text-[11px] text-red-600 hover:text-white font-bold uppercase tracking-wider px-4 py-2 bg-red-50 border border-red-200 hover:bg-red-500 rounded-lg transition-all shadow-sm">Resetar Base</button>
-                            
                             <button @click="mostrarFormulario = !mostrarFormulario; if(mostrarFormulario) editandoIndex = null;" x-show="tipoUsuario !== 'Diretor'" class="text-[11px] text-white font-bold uppercase tracking-wider px-5 py-2 bg-premium-nivus hover:bg-blue-600 rounded-lg transition-all shadow-md flex items-center gap-2">
                                 <span x-text="mostrarFormulario && editandoIndex === null ? 'Fechar Formulário' : '+ Nova Máquina'"></span>
                             </button>
@@ -403,7 +418,7 @@
                         <div x-show="motosEstoque.length === 0" class="col-span-full py-20 text-center border-2 border-dashed border-slate-200 bg-white/50 rounded-2xl flex flex-col items-center justify-center">
                             <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                             <p class="text-premium-text text-sm font-bold">Vitrine vazia.</p>
-                            <p class="text-premium-muted text-xs mt-1">Clique em "+ Nova Máquina" para adicionar estoque.</p>
+                            <p class="text-premium-muted text-xs mt-1">Nenhuma máquina no estoque.</p>
                         </div>
                     </div>
                 </div>
@@ -411,34 +426,62 @@
             </div>
         </main>
     </div>
-    </template>
 
     <script>
         function arkheCrm() {
             return {
                 // ===================================
-                // MÁGICA: CONTROLE DE ACESSO (LOGIN)
+                // MÁGICA: LOGIN E CONTROLE DE ACESSOS
                 // ===================================
                 usuarioLogado: false,
                 nomeUsuario: '',
-                tipoUsuario: '', // Pode ser 'Vendedor' ou 'Diretor'
+                tipoUsuario: '', 
+                usuarioInput: '',
+                senhaInput: '',
+
+                usuariosPermitidos: [
+                    { nome: 'Cristiano', senha: '1010', tipo: 'Diretor', telefone: '5531998303054' },
+                    { nome: 'Nathan', senha: '2020', tipo: 'Vendedor', telefone: '5531999976103' },
+                    { nome: 'Samuel', senha: '3030', tipo: 'Vendedor', telefone: '5531996719737' },
+                    { nome: 'Gustavo', senha: '0000', tipo: 'Vendedor', telefone: '5531995280992' },
+                    { nome: 'Kawhan', senha: '4040', tipo: 'Vendedor', telefone: '5531997614673' },
+                    { nome: 'Moises', senha: '5050', tipo: 'Vendedor', telefone: '553193385312' },
+                    { nome: 'Avelar', senha: '6060', tipo: 'Vendedor', telefone: '5531972634277' },
+                    { nome: 'Ronan', senha: '7070', tipo: 'Vendedor', telefone: '5531972498347' }
+                ],
+
+                efetuarLogin() {
+                    if(!this.usuarioInput) {
+                        alert('Por favor, selecione seu nome na lista.');
+                        return;
+                    }
+                    let user = this.usuariosPermitidos.find(u => u.nome === this.usuarioInput);
+                    if(user && user.senha === this.senhaInput) {
+                        this.fazerLogin(user.nome, user.tipo);
+                    } else {
+                        alert('Senha incorreta! Tente novamente.');
+                        this.senhaInput = ''; // Limpa a senha se errar
+                    }
+                },
                 
                 fazerLogin(nome, tipo) {
                     this.nomeUsuario = nome;
                     this.tipoUsuario = tipo;
                     this.usuarioLogado = true;
-                    this.init(); // Puxa os dados atualizados ao logar
+                    this.senhaInput = ''; 
+                    this.init(); // Atualiza os dados de leads do Supabase
                 },
                 
                 sair() {
                     this.usuarioLogado = false;
                     this.nomeUsuario = '';
                     this.tipoUsuario = '';
+                    this.usuarioInput = '';
                     this.rotaAtiva = 'dashboard';
                 },
 
                 // ===================================
-                // DADOS DO SISTEMA
+                // DADOS DO SISTEMA E FILTROS
                 // ===================================
                 rotaAtiva: 'dashboard',
                 meuLink: 'cristianohonda-site.vercel.app/simulacao.html',
@@ -454,8 +497,13 @@
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
                 
-                novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
+                getLeadsFiltrados() {
+                    // Diretor vê tudo. Vendedor vê só o dele ou os que vieram do site "soltos"
+                    if(this.tipoUsuario === 'Diretor') return this.leads;
+                    return this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
+                },
                 
+                novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
                 motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [],
                 
                 ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
@@ -473,7 +521,11 @@
 
                 async adicionarLead() {
                     const { data, error } = await window.banco.from('leads').insert([{
-                        nome: this.novoLead.nome, moto: this.novoLead.moto, telefone: this.novoLead.telefone, status: this.novoLead.status
+                        nome: this.novoLead.nome, 
+                        moto: this.novoLead.moto, 
+                        telefone: this.novoLead.telefone, 
+                        status: this.novoLead.status,
+                        vendedor: this.nomeUsuario // Etiqueta o lead com o nome do vendedor!
                     }]).select();
 
                     if (data && data.length > 0) this.leads.unshift(data[0]);
@@ -489,7 +541,7 @@
                     localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
                 },
 
-                // LÓGICA DE MÚLTIPLAS FOTOS
+                // LÓGICA DE FOTOS E ESTOQUE
                 processarFoto(event) {
                     const files = event.target.files;
                     if(files.length === 0) return;
@@ -538,11 +590,18 @@
                 cancelarEdicao() {
                     this.novaMoto = { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] };
                     this.editandoIndex = null;
+                    this.mostrarFormulario = false;
                 },
 
                 venderMoto(index) {
-                    let gustavo = this.ranking.find(v => v.nome === 'Gustavo');
-                    if(gustavo) gustavo.vendas += 1;
+                    let vendedorAtual = this.ranking.find(v => v.nome === this.nomeUsuario);
+                    // Se o vendedor atual ainda não estiver no ranking, a gente adiciona ele agora
+                    if(!vendedorAtual) {
+                        vendedorAtual = { nome: this.nomeUsuario, vendas: 0 };
+                        this.ranking.push(vendedorAtual);
+                    }
+                    
+                    vendedorAtual.vendas += 1;
                     this.ranking.sort((a, b) => b.vendas - a.vendas);
                     
                     this.motosEstoque.splice(index, 1);
@@ -558,7 +617,7 @@
                 },
 
                 resetarEstoque() {
-                    if(confirm('Isso vai esvaziar sua vitrine de testes. Deseja continuar?')) {
+                    if(confirm('ATENÇÃO: Limpar vitrine?')) {
                         this.motosEstoque = [];
                         this.salvarDadosLocais();
                     }
