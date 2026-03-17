@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise de Crédito | Cristiano Honda</title>
+    <title>Estoque Premium | Cristiano Honda</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const supabaseUrl = 'https://uskuxnireyjvldgvngzq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza3V4bmlyZXlqdmxkZ3ZuZ3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzkyODYsImV4cCI6MjA4OTI1NTI4Nn0.X-6a0ZBPuL0CLC8tSrSNJn8UrOemGhse4IAfetKvLGc';
-        
         window.banco = window.supabase.createClient(supabaseUrl, supabaseKey);
     </script>
 
-    <script defer src="/_vercel/insights/script.js"></script>
-    
     <script>
         tailwind.config = {
             theme: {
@@ -27,12 +24,8 @@
                     fontFamily: { sans: ['Inter', 'sans-serif'], },
                     colors: {
                         premium: {
-                            white: '#FFFFFF',
-                            offwhite: '#F5F5F7',
-                            lightgray: '#E8E8ED',
-                            gray: '#86868B',
-                            dark: '#1D1D1F',
-                            honda: '#E4002B'
+                            bg: '#F4F7F9', panel: '#FFFFFF', border: '#E2E8F0', 
+                            text: '#1E293B', muted: '#64748B', honda: '#E4002B', nivus: '#0EA5E9'
                         }
                     },
                     boxShadow: {
@@ -44,14 +37,19 @@
         }
     </script>
     <style>
-        body { background-color: #F5F5F7; color: #1D1D1F; overflow-x: hidden; }
-        ::-webkit-scrollbar { width: 4px; }
+        body { background-color: #F4F7F9; color: #ff0000; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #E8E8ED; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
         [x-cloak] { display: none !important; }
+        
+        /* Ocultar scrollbar da lista de vendedores mantendo funcionalidade */
+        .scroll-consultores::-webkit-scrollbar { width: 4px; }
+        .scroll-consultores::-webkit-scrollbar-track { background: transparent; }
+        .scroll-consultores::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased selection:bg-premium-dark selection:text-white">
+<body class="antialiased selection:bg-premium-nivus selection:text-white" x-data="vitrinePublica()">
 
     <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 transition-all duration-300 shadow-sm">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
@@ -62,443 +60,126 @@
                     </a>
                 </div>
                 <div class="hidden lg:flex space-x-6 xl:space-x-8 items-center">
-                    
-                    <a href="index.html#quem-somos" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Quem Somos Nós</a>
-                    <a href="estoque.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Estoque</a>
-                    <a href="simulacao.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Simulação</a>
-                    <a href="consorcio.html" class="text-sm font-medium text-premium-gray hover:text-premium-dark transition-colors">Consórcio</a>
+                    <a href="index.html#quem-somos" class="text-sm font-medium text-premium-muted hover:text-premium-text transition-colors">Quem Somos Nós</a>
+                    <a href="estoque.html" class="text-sm font-bold text-premium-text transition-colors">Estoque</a>
+                    <a href="simulacao.html" class="text-sm font-medium text-premium-muted hover:text-premium-text transition-colors">Simulação</a>
+                    <a href="consorcio.html" class="text-sm font-medium text-premium-muted hover:text-premium-text transition-colors">Consórcio</a>
                     
                     <a href="painel.html" class="flex items-center gap-1.5 text-[10px] font-bold text-gray-400 hover:text-premium-honda transition-colors border-l border-gray-200 pl-6 xl:pl-8 ml-2 uppercase tracking-widest group">
                         <svg class="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         Área VIP
                     </a>
-                    
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="pt-40 pb-12 bg-white border-b border-gray-100">
+    <section class="pt-40 pb-16 bg-white border-b border-premium-border">
         <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center" data-aos="fade-up">
-            <h1 class="text-5xl md:text-6xl font-light text-premium-dark tracking-tight mb-4">
-                Aprovação <span class="font-semibold text-premium-honda">Expressa.</span>
+            <span class="bg-blue-50 text-premium-nivus text-xs font-black px-4 py-1.5 rounded-md uppercase tracking-widest inline-block mb-6 border border-blue-100">Pronta Entrega</span>
+            <h1 class="text-4xl md:text-6xl font-light text-premium-text tracking-tight mb-4">
+                Nosso <span class="font-black text-premium-text">Estoque.</span>
             </h1>
-            <p class="text-xl text-premium-gray font-light max-w-2xl mx-auto">
-                Preencha a ficha cadastral 100% online e segura. Nossos especialistas buscarão a melhor taxa do mercado para o seu financiamento.
+            <p class="text-lg text-premium-muted font-medium max-w-2xl mx-auto">
+                As melhores motos selecionadas, revisadas e com garantia. Escolha a sua e fale com um de nossos consultores agora mesmo.
             </p>
         </div>
     </section>
 
-    <section class="py-12 bg-white relative z-10 border-b border-gray-100">
+    <section class="py-16 bg-premium-bg min-h-[50vh]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             
-            <div class="text-center mb-8" data-aos="fade-up">
-                <p class="text-premium-honda font-semibold tracking-[0.2em] uppercase text-xs mb-2">Multi-Aprovações</p>
-                <h2 class="text-2xl font-light text-premium-dark mb-2">Trabalhamos com os <span class="font-semibold">Gigantes.</span></h2>
+            <div class="flex justify-between items-center mb-8">
+                <p class="text-sm font-bold text-premium-muted uppercase tracking-wider">Mostrando <span class="text-premium-nivus" x-text="motosEstoque.length"></span> veículos</p>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 
-                <div class="bg-premium-offwhite rounded-2xl p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-floating border border-transparent hover:border-[#CC092F]/20 group cursor-default">
-                    <span class="font-bold text-lg text-gray-400 group-hover:text-[#CC092F] transition-colors duration-500 tracking-tight">Bradesco</span>
-                </div>
-
-                <div class="bg-premium-offwhite rounded-2xl p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-floating border border-transparent hover:border-[#EC0000]/20 group cursor-default">
-                    <span class="font-bold text-lg text-gray-400 group-hover:text-[#EC0000] transition-colors duration-500 tracking-tight">Santander</span>
-                </div>
-
-                <div class="bg-premium-offwhite rounded-2xl p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-floating border border-transparent hover:border-[#FFB612]/30 group cursor-default">
-                    <span class="font-extrabold text-xl lowercase text-gray-400 group-hover:text-[#FFB612] transition-colors duration-500 tracking-tighter">bv</span>
-                </div>
-
-                <div class="bg-premium-offwhite rounded-2xl p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-floating border border-transparent hover:border-[#00A1FC]/20 group cursor-default">
-                    <span class="font-bold text-lg text-gray-400 group-hover:text-[#00A1FC] transition-colors duration-500 tracking-tight">Banco PAN</span>
-                </div>
-
-                <div class="bg-premium-offwhite rounded-2xl p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:-translate-y-1 hover:shadow-floating border border-transparent hover:border-[#004A8F]/20 group cursor-default">
-                    <span class="font-bold text-lg text-gray-400 group-hover:text-[#004A8F] transition-colors duration-500 tracking-tight">Omni</span>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section class="py-20 bg-premium-offwhite">
-        <div class="max-w-5xl mx-auto px-6 lg:px-12">
-            
-            <div 
-                x-data="{
-                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || '',
-                    
-                    entrada: '', parcelas: '48',
-                    nomeCompleto: '', cpf: '', rg: '', nascimento: '', nomeMae: '', celular: '', email: '',
-                    cnh: 'Não Tenho', nomeSujo: 'Não', valorSujo: '',
-                    cep: '', rua: '', numero: '', bairro: '', cidade: '',
-                    tipoProfissao: 'Fichado', profissao: '', tempoTrabalho: '', telTrabalho: '', renda: '', endTrabalho: '',
-                    ref1Nome: '', ref1Cel: '', ref1Relacao: '',
-                    ref2Nome: '', ref2Cel: '', ref2Relacao: '',
-                    
-                    modeloDesejado: '',
-                    motosNoEstoque: [], 
-                    
-                    openMenu: false,
-
-                    async init() {
-                        const { data, error } = await window.banco.from('estoque').select('id, modelo, placa, preco').order('created_at', { ascending: false });
-                        if(data) {
-                            this.motosNoEstoque = data;
-                        }
-                    },
-
-                    async enviarFicha(telefone) {
-                        if(this.nomeCompleto.trim() === '' || this.cpf.trim() === '' || this.modeloDesejado === '') {
-                            alert('Por favor, preencha Nome, CPF e a Máquina Desejada para iniciarmos a análise.');
-                            this.openMenu = false;
-                            return;
-                        }
-
-                        await window.banco.from('leads').insert([{
-                            nome: this.nomeCompleto,
-                            moto: 'Financiamento: ' + this.modeloDesejado + ' (' + this.parcelas + 'x)',
-                            telefone: this.celular || 'Sem número',
-                            status: 'Análise',
-                            vendedor: this.vendedorDaUrl
-                        }]);
+                <template x-for="(moto, index) in motosEstoque" :key="moto.id || index">
+                    <div class="bg-premium-panel border border-premium-border rounded-3xl overflow-hidden flex flex-col group hover:border-premium-nivus hover:shadow-floating transition-all duration-300 shadow-sm">
                         
-                        let texto = `*FICHA CADASTRAL - FINANCIAMENTO SITE*%0A%0A`;
-                        texto += `*🏁 MÁQUINA DESEJADA:* ${this.modeloDesejado}%0A`;
-                        texto += `Entrada: R$ ${this.entrada}%0AParcelas: ${this.parcelas}x%0A%0A`;
-                        texto += `*👤 DADOS PESSOAIS*%0ANome: ${this.nomeCompleto}%0ACPF: ${this.cpf}%0ARG: ${this.rg}%0ANascimento: ${this.nascimento}%0AMãe: ${this.nomeMae}%0ACelular: ${this.celular}%0AEmail: ${this.email}%0A%0A`;
-                        texto += `*🚦 PERFIL*%0ACNH: ${this.cnh}%0ANome Sujo: ${this.nomeSujo} ${this.nomeSujo === 'Sim' ? '(R$ ' + this.valorSujo + ')' : ''}%0A%0A`;
-                        texto += `*📍 ENDEREÇO RESIDENCIAL*%0ACEP: ${this.cep}%0A${this.rua}, ${this.numero} - ${this.bairro}, ${this.cidade}%0A%0A`;
-                        texto += `*💼 DADOS PROFISSIONAIS* (${this.tipoProfissao})%0AProfissão: ${this.profissao}%0ATempo: ${this.tempoTrabalho}%0ARenda: R$ ${this.renda}%0ATel Serviço: ${this.telTrabalho}%0AEndereço Trabalho: ${this.endTrabalho}%0A%0A`;
-                        texto += `*🤝 REFERÊNCIAS*%0A1) ${this.ref1Nome} - Cel: ${this.ref1Cel} (${this.ref1Relacao})%0A`;
-                        texto += `2) ${this.ref2Nome} - Cel: ${this.ref2Cel} (${this.ref2Relacao})%0A%0A`;
-                        texto += `_Ficha enviada via site Cristiano Honda._`;
-
-                        window.open(`https://wa.me/${telefone}?text=${texto}`, '_blank');
-                    }
-                }"
-                class="bg-white rounded-3xl p-8 md:p-12 shadow-premium border border-gray-100"
-                data-aos="zoom-in"
-                data-aos-delay="200"
-            >
-                
-                <div class="mb-10">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        A Proposta
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Entrada R$</label>
-                            <input type="number" x-model="entrada" placeholder="Ex: 5000" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Quantas Parcelas?</label>
-                            <select x-model="parcelas" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                                <option value="24">24 vezes</option>
-                                <option value="36">36 vezes</option>
-                                <option value="48">48 vezes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                        Dados Pessoais
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="md:col-span-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Nome Completo</label>
-                            <input type="text" x-model="nomeCompleto" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">CPF</label>
-                            <input type="text" x-model="cpf" placeholder="000.000.000-00" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">RG</label>
-                            <input type="text" x-model="rg" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Data Nasc.</label>
-                            <input type="text" x-model="nascimento" placeholder="DD/MM/AAAA" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Nome da Mãe</label>
-                            <input type="text" x-model="nomeMae" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">E-mail</label>
-                            <input type="email" x-model="email" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Celular / WhatsApp</label>
-                            <input type="text" x-model="celular" placeholder="(00) 00000-0000" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Possui CNH?</label>
-                            <select x-model="cnh" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                                <option value="Moto">Sim (Moto)</option>
-                                <option value="Carro">Sim (Carro)</option>
-                                <option value="Carro e Moto">Sim (Carro e Moto)</option>
-                                <option value="Não Tenho">Não Tenho</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Nome Limpo?</label>
-                            <select x-model="nomeSujo" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                                <option value="Não">Sim, nome limpo</option>
-                                <option value="Sim">Não, possui restrição</option>
-                            </select>
-                        </div>
-                        <div x-show="nomeSujo === 'Sim'">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Valor da Dívida R$</label>
-                            <input type="text" x-model="valorSujo" placeholder="Aprox. R$" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                        Endereço Residencial
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">CEP</label>
-                            <input type="text" x-model="cep" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Rua / Av.</label>
-                            <input type="text" x-model="rua" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Número</label>
-                            <input type="text" x-model="numero" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Bairro</label>
-                            <input type="text" x-model="bairro" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Cidade - UF</label>
-                            <input type="text" x-model="cidade" placeholder="Ex: Matozinhos - MG" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-10">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        Dados Profissionais
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Regime</label>
-                            <select x-model="tipoProfissao" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                                <option value="Fichado (CLT)">Fichado (CLT)</option>
-                                <option value="Autônomo">Autônomo</option>
-                                <option value="Aposentado">Aposentado</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Cargo / Profissão</label>
-                            <input type="text" x-model="profissao" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Tempo de Serviço</label>
-                            <input type="text" x-model="tempoTrabalho" placeholder="Ex: 2 anos" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Renda Mensal R$</label>
-                            <input type="text" x-model="renda" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Tel. da Empresa</label>
-                            <input type="text" x-model="telTrabalho" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div class="md:col-span-3">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase mb-2">Endereço Comercial</label>
-                            <input type="text" x-model="endTrabalho" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-12">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        Referências Pessoais
-                    </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <div class="md:col-span-3"><p class="text-xs text-premium-honda uppercase tracking-widest font-semibold">Referência 01</p></div>
-                        <div class="md:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">Nome</label>
-                            <input type="text" x-model="ref1Nome" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">Celular</label>
-                            <input type="text" x-model="ref1Cel" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">O que é seu?</label>
-                            <input type="text" x-model="ref1Relacao" placeholder="Ex: Tio, Amigo" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="md:col-span-3"><p class="text-xs text-premium-honda uppercase tracking-widest font-semibold">Referência 02</p></div>
-                        <div class="md:col-span-1">
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">Nome</label>
-                            <input type="text" x-model="ref2Nome" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">Celular</label>
-                            <input type="text" x-model="ref2Cel" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">O que é seu?</label>
-                            <input type="text" x-model="ref2Relacao" placeholder="Ex: Vizinho, Parente" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-premium-honda text-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mb-12">
-                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        O Seu Sonho
-                    </h3>
-                    <div class="grid grid-cols-1 gap-6 mb-6">
-                        <div class="w-full">
-                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Qual máquina você deseja financiar?</label>
-                            <div class="relative">
-                                <select x-model="modeloDesejado" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-4 outline-none focus:border-premium-honda text-sm font-medium text-premium-dark appearance-none cursor-pointer">
-                                    <option value="" disabled selected>Selecione a máquina do nosso estoque...</option>
-                                    
-                                    <template x-for="moto in motosNoEstoque" :key="moto.id">
-                                        <option 
-                                            :value="moto.modelo + ' (Placa: ' + moto.placa + ' | R$ ' + moto.preco + ')'" 
-                                            x-text="moto.modelo + ' - Placa: ' + moto.placa + ' - R$ ' + moto.preco"
-                                        ></option>
-                                    </template>
-                                    
-                                    <option value="Outro Modelo / Encomenda">Outro Modelo / Encomenda</option>
-                                </select>
-                                <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-100 pt-10 flex flex-col items-center">
-                    
-                    <div class="relative w-full max-w-sm flex flex-col items-center">
-                        
-                        <div 
-                            x-show="openMenu" 
-                            @click.away="openMenu = false"
-                            x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
-                            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-                            x-transition:leave="transition ease-in duration-200"
-                            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
-                            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-                            class="absolute bottom-full mb-4 w-full bg-white rounded-3xl shadow-[0_20px_40px_-10px_rgba(0,0,0,0.2)] border border-gray-100 p-2 z-50 max-h-[350px] overflow-y-auto"
-                            style="display: none;"
-                        >
-                            <p class="text-xs font-semibold text-premium-gray uppercase tracking-widest mb-2 mt-2 px-2 sticky top-0 bg-white z-10 py-1">Enviar ficha para:</p>
+                        <div x-data="{ slideAtual: 0 }" class="relative h-56 shrink-0 w-full bg-slate-100 flex items-center justify-center overflow-hidden border-b border-premium-border">
+                            <template x-if="moto.fotos && moto.fotos.length > 0">
+                                <template x-for="(f, i) in moto.fotos" :key="i">
+                                    <img x-show="slideAtual === i" :src="f" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500">
+                                </template>
+                            </template>
                             
-                            <button @click="enviarFicha('5531998303054')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-cristiano.JPG" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Cristiano</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
+                            <template x-if="!moto.fotos || moto.fotos.length === 0">
+                                <svg class="w-16 h-16 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                            </template>
 
-                            <button @click="enviarFicha('5531999976103')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-nathan.JPG" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Nathan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
+                            <template x-if="moto.fotos && moto.fotos.length > 1">
+                                <div class="absolute inset-0 flex items-center justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button @click.stop="slideAtual = slideAtual > 0 ? slideAtual - 1 : moto.fotos.length - 1" class="bg-black/30 hover:bg-premium-nivus text-white rounded-full p-2 backdrop-blur-md transition-colors shadow-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                                    </button>
+                                    <button @click.stop="slideAtual = slideAtual < moto.fotos.length - 1 ? slideAtual + 1 : 0" class="bg-black/30 hover:bg-premium-nivus text-white rounded-full p-2 backdrop-blur-md transition-colors shadow-lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                                    </button>
+                                </div>
+                            </template>
 
-                            <button @click="enviarFicha('5531996719737')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-samuel.JPG" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Samuel</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
-
-                            <button @click="enviarFicha('5531995280992')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-gustavo.JPG" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Gustavo</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
-
-                            <button @click="enviarFicha('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-kawhan.JPG" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Kawhan</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
-
-                            <button @click="enviarFicha('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-moises.JPG" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Moises</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
-
-                            <button @click="enviarFicha('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-avelar.JPG" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Avelar</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
-                            <div class="h-px w-full bg-gray-50 my-0.5"></div>
-
-                            <button @click="enviarFicha('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-ronan.JPG" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Ronan</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
-                                <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
-                            </button>
+                            <template x-if="moto.fotos && moto.fotos.length > 1">
+                                <div class="absolute bottom-3 left-0 w-full flex justify-center gap-2 z-10">
+                                    <template x-for="(f, idx) in moto.fotos" :key="idx">
+                                        <div class="w-2 h-2 rounded-full transition-all shadow-sm" :class="slideAtual === idx ? 'bg-white scale-125' : 'bg-white/50'"></div>
+                                    </template>
+                                </div>
+                            </template>
+                            
+                            <div class="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-green-600 text-[10px] uppercase tracking-widest font-black px-3 py-1.5 rounded-md shadow-sm border border-green-100">Disponível</div>
                         </div>
 
-                        <button @click="openMenu = !openMenu" class="w-full inline-flex items-center justify-center gap-3 bg-premium-dark text-white text-base font-medium py-4 px-8 rounded-full hover:bg-black hover:scale-105 transition-all duration-300 shadow-xl outline-none mt-4">
-                            Enviar Ficha para Aprovação
-                            <svg class="w-5 h-5 transition-transform duration-300" :class="{'rotate-180': openMenu}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-                        </button>
-                        
+                        <div class="p-6 flex-1 flex flex-col bg-white">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-lg font-black text-premium-text leading-tight line-clamp-2 pr-3" x-text="moto.modelo"></h3>
+                                <span class="shrink-0 bg-blue-50 text-premium-nivus font-black text-[11px] px-2.5 py-1 rounded-md uppercase tracking-wider border border-blue-100" x-text="moto.cilindrada + 'cc'"></span>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold" x-text="moto.ano"></span>
+                                <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
+                                <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold capitalize" x-text="moto.cor"></span>
+                                <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider" x-text="moto.placa"></span>
+                            </div>
+                            
+                            <div class="mt-auto mb-6">
+                                <p class="text-[10px] text-premium-muted font-bold uppercase tracking-widest mb-1">Valor à vista</p>
+                                <p class="text-3xl font-light text-slate-800 tracking-tight leading-none">R$ <span class="font-black" x-text="moto.preco"></span></p>
+                            </div>
+                            
+                            <button @click="abrirModalInteresse(moto.modelo)" class="w-full flex items-center justify-center gap-2 bg-premium-dark text-white hover:bg-black py-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-xl group">
+                                <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                Tenho Interesse
+                            </button>
+                        </div>
                     </div>
+                </template>
 
+                <div x-show="motosEstoque.length === 0" class="col-span-full py-32 text-center border-2 border-dashed border-premium-border bg-white rounded-3xl flex flex-col items-center justify-center shadow-sm" x-cloak>
+                    <svg class="w-16 h-16 text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    <p class="text-premium-text text-xl font-bold mb-2">Estoque em Atualização.</p>
+                    <p class="text-premium-muted text-sm font-medium">Nossas máquinas estão passando por revisão no momento. Volte em breve!</p>
                 </div>
+
             </div>
         </div>
     </section>
 
     <footer class="bg-premium-dark text-white pt-24 pb-10 border-t border-white/10 relative z-10">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            
             <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-20">
-                
-                <div class="md:col-span-5 lg:col-span-4" data-aos="fade-right">
+                <div class="md:col-span-5 lg:col-span-4">
                     <h2 class="text-3xl font-light tracking-tight mb-6 uppercase">
                         Cristiano <span class="font-bold text-premium-honda">Honda</span>
                     </h2>
                     <p class="text-gray-400 font-light text-sm leading-relaxed mb-8 max-w-sm">
                         O padrão definitivo em duas rodas. Mais que uma concessionária, somos a realização do seu objetivo com segurança absoluta e exclusividade em Minas Gerais.
                     </p>
-                    <div class="flex items-center gap-4">
-                        <a href="#" target="_blank" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-premium-honda hover:border-premium-honda transition-all duration-300 group">
-                            <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.88z"/></svg>
-                        </a>
-                    </div>
                 </div>
 
-                <div class="md:col-span-3 lg:col-span-2 lg:col-start-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="md:col-span-3 lg:col-span-2 lg:col-start-6">
                     <h4 class="text-white font-semibold mb-6 uppercase tracking-[0.15em] text-xs">Acelere</h4>
                     <ul class="space-y-4">
                         <li><a href="index.html#quem-somos" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Quem Somos Nós</a></li>
@@ -508,21 +189,13 @@
                     </ul>
                 </div>
 
-                <div class="md:col-span-4 lg:col-span-3" data-aos="fade-up" data-aos-delay="200">
+                <div class="md:col-span-4 lg:col-span-3">
                     <h4 class="text-white font-semibold mb-6 uppercase tracking-[0.15em] text-xs">Atendimento</h4>
                     <ul class="space-y-4">
                         <li><a href="index.html#showrooms" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Localize Nossas Lojas</a></li>
-                        <li><a href="index.html#contato" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Consultoria VIP (WhatsApp)</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Garantia e Procedência</a></li>
+                        <li><a href="index.html#contato" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Consultoria VIP</a></li>
                     </ul>
                 </div>
-
-                <div class="md:col-span-12 lg:col-span-2 flex lg:justify-end items-start mt-4 lg:mt-0" data-aos="fade-left" data-aos-delay="300">
-                    <a href="#" class="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-premium-honda hover:border-premium-honda hover:scale-110 transition-all duration-300 shadow-2xl group">
-                        <svg class="w-6 h-6 group-hover:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                    </a>
-                </div>
-
             </div>
 
             <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
@@ -530,17 +203,195 @@
                     © 2026 Cristiano Honda. Todos os direitos reservados.
                 </p>
                 <p class="text-gray-500 text-xs font-light flex items-center gap-1.5 tracking-wide">
-                    Desenvolvido por <a href="#" target="_blank" class="text-white font-medium hover:text-premium-honda transition-colors">Arkhe Tech</a>
+                    Desenvolvido por <span class="text-white font-medium">Arkhe Tech</span>
                 </p>
             </div>
-            
         </div>
     </footer>
 
+    <div x-show="modalAberto" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" x-transition.opacity style="display: none;" x-cloak>
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col" @click.away="fecharModal()">
+            
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-premium-bg">
+                <div>
+                    <h3 class="text-lg font-black text-premium-text">Falar com Consultor</h3>
+                    <p class="text-xs text-premium-muted mt-1 font-medium">Estou interessado(a) na: <span class="font-black text-premium-honda uppercase tracking-wide" x-text="motoSelecionada"></span></p>
+                </div>
+                <button @click="fecharModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-2 max-h-[60vh] overflow-y-auto scroll-consultores bg-white">
+                
+                <button @click="enviarWhatsApp('5531998303054')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-cristiano.JPG" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Cristiano</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531999976103')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-nathan.JPG" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Nathan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531996719737')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-samuel.JPG" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Samuel</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531995280992')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-gustavo.JPG" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Gustavo</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-kawhan.JPG" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Kawhan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-moises.JPG" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Moises</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-avelar.JPG" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Avelar</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-ronan.JPG" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Ronan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function vitrinePublica() {
+            return {
+                motosEstoque: [],
+                modalAberto: false,
+                motoSelecionada: '',
+
+                async init() {
+                    const { data, error } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
+                    
+                    if (data) {
+                        this.motosEstoque = data.map(moto => {
+                            let arraySeguro = [];
+                            if (Array.isArray(moto.fotos)) {
+                                arraySeguro = moto.fotos;
+                            } else if (typeof moto.fotos === 'string') {
+                                try { 
+                                    let parsed = JSON.parse(moto.fotos); 
+                                    if(Array.isArray(parsed)) arraySeguro = parsed;
+                                    else if (moto.fotos.includes('data:image')) arraySeguro = [moto.fotos];
+                                } catch(e) { 
+                                    if (moto.fotos.includes('data:image')) arraySeguro = [moto.fotos];
+                                }
+                            }
+                            moto.fotos = arraySeguro;
+                            return moto;
+                        });
+                    }
+                },
+
+                abrirModalInteresse(modelo) {
+                    this.motoSelecionada = modelo;
+                    this.modalAberto = true;
+                },
+
+                fecharModal() {
+                    this.modalAberto = false;
+                    this.motoSelecionada = '';
+                },
+
+                enviarWhatsApp(telefone) {
+                    const texto = `Olá! Vi a moto *${this.motoSelecionada}* no estoque do site e tenho interesse. Podemos conversar?`;
+                    window.open(`https://wa.me/${telefone}?text=${texto}`, '_blank');
+                    this.fecharModal();
+                }
+            }
+        }
+    </script>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ once: true, offset: 50 });
+        AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
     </script>
-<script defer src="/_vercel/insights/script.js"></script>
+    <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
