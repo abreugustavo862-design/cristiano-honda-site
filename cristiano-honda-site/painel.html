@@ -93,7 +93,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></span>
                     </div>
-                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="leadsFiltrados.length"></span>
+                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="stats.total"></span>
                 </button>
 
                 <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mt-2">
@@ -104,7 +104,7 @@
 
             <div class="p-4 border-t border-premium-border">
                 <div class="flex items-center gap-3 bg-premium-bg p-3 rounded-xl border border-premium-border">
-                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-md" :class="tipoUsuario === 'Diretor' ? 'bg-slate-800' : 'bg-premium-honda'" x-text="nomeUsuario.charAt(0)"></div>
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-md" :class="tipoUsuario === 'Diretor' ? 'bg-slate-800' : 'bg-premium-honda'" x-text="nomeUsuario ? nomeUsuario.charAt(0) : ''"></div>
                     <div class="flex-1 overflow-hidden">
                         <p class="text-sm font-bold text-premium-text truncate" x-text="nomeUsuario"></p>
                         <p class="text-[10px] text-premium-muted truncate uppercase tracking-wider" x-text="tipoUsuario === 'Diretor' ? 'Visão Diretoria' : 'Consultor Premium'"></p>
@@ -123,7 +123,7 @@
                 <div class="flex items-center gap-4">
                     <button @click="copiarLink()" x-show="tipoUsuario !== 'Diretor'" class="flex items-center gap-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-premium-nivus px-4 py-2 rounded-lg text-sm font-medium transition-all group">
                         <span class="text-premium-muted group-hover:text-premium-text transition-colors">Meu Link:</span>
-                        <span class="text-premium-text truncate w-32" x-text="meuLink"></span>
+                        <span class="text-premium-text truncate w-32" x-text="meuLink + '?vendedor=' + nomeUsuario"></span>
                         <svg class="w-4 h-4 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                     </button>
                     <button @click="sair()" class="bg-red-50 text-premium-honda border border-red-100 hover:bg-premium-honda hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Sair</button>
@@ -137,22 +137,22 @@
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></p>
-                            <p class="text-4xl font-light text-premium-text" x-text="leadsFiltrados.length"></p>
+                            <p class="text-4xl font-light text-premium-text" x-text="stats.total"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Em Análise</p>
-                            <p class="text-4xl font-light text-yellow-600" x-text="leadsFiltrados.filter(l => l.status === 'Análise').length"></p>
+                            <p class="text-4xl font-light text-yellow-600" x-text="stats.analise"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Aprovados</p>
-                            <p class="text-4xl font-light text-green-600" x-text="leadsFiltrados.filter(l => l.status === 'Aprovado').length"></p>
+                            <p class="text-4xl font-light text-green-600" x-text="stats.aprovados"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Vendas Globais' : 'Minhas Vendas'"></p>
-                            <p class="text-4xl font-semibold text-premium-nivus" x-text="tipoUsuario === 'Diretor' ? ranking.reduce((acc, curr) => acc + curr.vendas, 0) : ranking.find(v => v.nome === nomeUsuario)?.vendas || 0"></p>
+                            <p class="text-4xl font-semibold text-premium-nivus" x-text="stats.vendas"></p>
                         </div>
                     </div>
 
@@ -163,7 +163,7 @@
                                 <span class="text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
                             </h3>
                             <div class="space-y-3">
-                                <template x-for="(vendedor, index) in ranking.slice(0,5)" :key="index">
+                                <template x-for="(vendedor, index) in topRanking" :key="vendedor.nome">
                                     <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-yellow-50/50 border border-yellow-100 border-l-4 border-l-yellow-400' : ''">
                                         <div class="flex items-center gap-4">
                                             <span class="text-slate-400 font-black w-4 text-center text-lg" x-text="index + 1"></span>
@@ -204,15 +204,15 @@
                         <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end">
                             <div class="flex-1 w-full">
                                 <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Nome do Cliente</label>
-                                <input type="text" x-model="novoLead.nome" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
+                                <input type="text" x-model="novoLead.nome" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all font-medium">
                             </div>
                             <div class="flex-1 w-full">
                                 <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Interesse (Moto)</label>
-                                <input type="text" x-model="novoLead.moto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
+                                <input type="text" x-model="novoLead.moto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all font-medium">
                             </div>
                             <div class="flex-1 w-full">
                                 <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">WhatsApp</label>
-                                <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
+                                <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all font-medium">
                             </div>
                             <button type="submit" class="bg-premium-honda text-white font-bold tracking-wide rounded-xl px-8 py-3 text-sm hover:bg-red-700 hover:shadow-lg transition-all w-full md:w-auto">
                                 Salvar Ficha
@@ -232,7 +232,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(lead, index) in leadsFiltrados" :key="index">
+                                <template x-for="lead in leadsVisiveis" :key="lead.id">
                                     <tr class="border-b border-premium-border hover:bg-slate-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-3">
@@ -265,7 +265,7 @@
                                         </td>
                                     </tr>
                                 </template>
-                                <tr x-show="leadsFiltrados.length === 0">
+                                <tr x-show="leadsVisiveis.length === 0">
                                     <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-sm">Nenhum lead cadastrado ainda no seu painel. Compartilhe seu link para começar!</td>
                                 </tr>
                             </tbody>
@@ -277,7 +277,6 @@
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold text-premium-text">Vitrine <span class="font-light">Premium</span></h2>
                         <div class="flex gap-3">
-                            <button @click="resetarEstoque()" x-show="tipoUsuario === 'Diretor'" class="text-[11px] text-red-600 hover:text-white font-bold uppercase tracking-wider px-4 py-2 bg-red-50 border border-red-200 hover:bg-red-500 rounded-lg transition-all shadow-sm">Resetar Base</button>
                             <button @click="mostrarFormulario = !mostrarFormulario; if(mostrarFormulario) editandoIndex = null;" x-show="tipoUsuario !== 'Diretor'" class="text-[11px] text-white font-bold uppercase tracking-wider px-5 py-2 bg-premium-nivus hover:bg-blue-600 rounded-lg transition-all shadow-md flex items-center gap-2">
                                 <span x-text="mostrarFormulario && editandoIndex === null ? 'Fechar Formulário' : '+ Nova Máquina'"></span>
                             </button>
@@ -349,7 +348,7 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                        <template x-for="(moto, index) in motosEstoque" :key="index">
+                        <template x-for="(moto, index) in motosEstoque" :key="moto.id || index">
                             <div class="bg-premium-panel border border-slate-200 rounded-2xl overflow-hidden flex flex-col group hover:border-premium-nivus hover:shadow-lg transition-all duration-300 shadow-sm h-[460px]">
                                 
                                 <div x-data="{ slideAtual: 0 }" class="relative h-48 shrink-0 w-full bg-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-100">
@@ -494,18 +493,12 @@
                     if(this.rotaAtiva === 'estoque') return 'Controle de Estoque';
                 },
 
-                novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
+                // O SEGREDO DO DESEMPENHO: Variáveis Pré-Calculadas
+                stats: { total: 0, analise: 0, aprovados: 0, vendas: 0 },
+                leadsVisiveis: [],
+                topRanking: [],
                 leads: [],
-                leadsFiltrados: [], // Variável de proteção contra travamentos!
                 
-                atualizarFiltro() {
-                    if(this.tipoUsuario === 'Diretor') {
-                        this.leadsFiltrados = this.leads;
-                    } else {
-                        this.leadsFiltrados = this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
-                    }
-                },
-
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
                 motosEstoque: [], 
                 
@@ -515,17 +508,45 @@
                     { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
                 ],
 
+                atualizarDashboard() {
+                    // Filtra Leads 1 única vez
+                    if(this.tipoUsuario === 'Diretor') {
+                        this.leadsVisiveis = this.leads;
+                    } else {
+                        this.leadsVisiveis = this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
+                    }
+                    
+                    // Calcula as estatísticas
+                    this.stats.total = this.leadsVisiveis.length;
+                    this.stats.analise = this.leadsVisiveis.filter(l => l.status === 'Análise').length;
+                    this.stats.aprovados = this.leadsVisiveis.filter(l => l.status === 'Aprovado').length;
+                    
+                    if(this.tipoUsuario === 'Diretor') {
+                        this.stats.vendas = this.ranking.reduce((acc, curr) => acc + curr.vendas, 0);
+                    } else {
+                        let v = this.ranking.find(r => r.nome === this.nomeUsuario);
+                        this.stats.vendas = v ? v.vendas : 0;
+                    }
+
+                    // Ordena e pega os top 5 para evitar loop infinito na tela
+                    this.ranking.sort((a, b) => b.vendas - a.vendas);
+                    this.topRanking = this.ranking.slice(0, 5);
+                },
+
                 async init() {
                     // Puxa Leads
                     const { data: leadsData } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
                     if (leadsData) {
                         this.leads = leadsData;
-                        this.atualizarFiltro(); // Filtra a tabela do vendedor só 1x
                     }
                     
                     // Puxa Estoque da Nuvem
                     const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
-                    if (estoqueData) this.motosEstoque = estoqueData;
+                    if (estoqueData) {
+                        this.motosEstoque = estoqueData;
+                    }
+
+                    this.atualizarDashboard(); // Atualiza a tela de forma leve
                 },
 
                 async adicionarLead() {
@@ -538,16 +559,40 @@
 
                 async atualizarStatus(lead) {
                     await window.banco.from('leads').update({ status: lead.status }).eq('id', lead.id);
+                    this.atualizarDashboard();
                 },
 
-                processarFoto(event) {
+                // COMPRESSOR DE IMAGENS INVISÍVEL (MÁGICA PARA NÃO TRAVAR O BANCO)
+                comprimirImagem(file) {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const canvas = document.createElement('canvas');
+                                const MAX_WIDTH = 800; // Reduz a imagem para o tamanho ideal da tela
+                                const scaleSize = MAX_WIDTH / img.width;
+                                canvas.width = MAX_WIDTH;
+                                canvas.height = img.height * scaleSize;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                                resolve(canvas.toDataURL('image/jpeg', 0.6)); // Comprime para 60% da qualidade
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                },
+
+                async processarFoto(event) {
                     const files = event.target.files;
                     if(files.length === 0) return;
                     for(let i = 0; i < files.length; i++) {
                         if (this.novaMoto.fotos.length >= 4) { alert("Máximo de 4 fotos!"); break; }
-                        const reader = new FileReader();
-                        reader.onload = (e) => { this.novaMoto.fotos.push(e.target.result); };
-                        reader.readAsDataURL(files[i]);
+                        
+                        // Passa a foto pelo compressor antes de ir pro código
+                        const fotoComprimida = await this.comprimirImagem(files[i]);
+                        this.novaMoto.fotos.push(fotoComprimida);
                     }
                 },
                 
@@ -590,7 +635,6 @@
                     let vendedorAtual = this.ranking.find(v => v.nome === this.nomeUsuario);
                     if(!vendedorAtual) { vendedorAtual = { nome: this.nomeUsuario, vendas: 0 }; this.ranking.push(vendedorAtual); }
                     vendedorAtual.vendas += 1;
-                    this.ranking.sort((a, b) => b.vendas - a.vendas);
                     localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
                     
                     await window.banco.from('estoque').delete().eq('id', motoId);
@@ -607,7 +651,7 @@
                 },
 
                 async resetarEstoque() {
-                    alert("Atenção: O reset global de nuvem deve ser feito deletando as motos uma a uma ou limpando a tabela direto no Supabase por segurança.");
+                    alert("Atenção: Para evitar acidentes com a nuvem, o Diretor deve excluir as motos clicando em 'Errada' na ficha ou direto no painel Supabase.");
                 },
                 
                 copiarLink() {
