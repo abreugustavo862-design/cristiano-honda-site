@@ -93,7 +93,7 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         <span x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></span>
                     </div>
-                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="getLeadsFiltrados().length"></span>
+                    <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="leadsFiltrados.length"></span>
                 </button>
 
                 <button @click="rotaAtiva = 'estoque'" :class="rotaAtiva === 'estoque' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mt-2">
@@ -137,17 +137,17 @@
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></p>
-                            <p class="text-4xl font-light text-premium-text" x-text="getLeadsFiltrados().length"></p>
+                            <p class="text-4xl font-light text-premium-text" x-text="leadsFiltrados.length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Em Análise</p>
-                            <p class="text-4xl font-light text-yellow-600" x-text="getLeadsFiltrados().filter(l => l.status === 'Análise').length"></p>
+                            <p class="text-4xl font-light text-yellow-600" x-text="leadsFiltrados.filter(l => l.status === 'Análise').length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-10"></div>
                             <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Aprovados</p>
-                            <p class="text-4xl font-light text-green-600" x-text="getLeadsFiltrados().filter(l => l.status === 'Aprovado').length"></p>
+                            <p class="text-4xl font-light text-green-600" x-text="leadsFiltrados.filter(l => l.status === 'Aprovado').length"></p>
                         </div>
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
                             <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
@@ -232,7 +232,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <template x-for="(lead, index) in getLeadsFiltrados()" :key="index">
+                                <template x-for="(lead, index) in leadsFiltrados" :key="index">
                                     <tr class="border-b border-premium-border hover:bg-slate-50 transition-colors">
                                         <td class="px-6 py-4">
                                             <div class="flex items-center gap-3">
@@ -265,7 +265,7 @@
                                         </td>
                                     </tr>
                                 </template>
-                                <tr x-show="getLeadsFiltrados().length === 0">
+                                <tr x-show="leadsFiltrados.length === 0">
                                     <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-sm">Nenhum lead cadastrado ainda no seu painel. Compartilhe seu link para começar!</td>
                                 </tr>
                             </tbody>
@@ -496,8 +496,18 @@
 
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
+                leadsFiltrados: [], // Variável de proteção contra travamentos!
+                
+                atualizarFiltro() {
+                    if(this.tipoUsuario === 'Diretor') {
+                        this.leadsFiltrados = this.leads;
+                    } else {
+                        this.leadsFiltrados = this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
+                    }
+                },
+
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
-                motosEstoque: [], // Agora vem da nuvem!
+                motosEstoque: [], 
                 
                 ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
                     { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
@@ -505,15 +515,13 @@
                     { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
                 ],
 
-                getLeadsFiltrados() {
-                    if(this.tipoUsuario === 'Diretor') return this.leads;
-                    return this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
-                },
-
                 async init() {
                     // Puxa Leads
                     const { data: leadsData } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
-                    if (leadsData) this.leads = leadsData;
+                    if (leadsData) {
+                        this.leads = leadsData;
+                        this.atualizarFiltro(); // Filtra a tabela do vendedor só 1x
+                    }
                     
                     // Puxa Estoque da Nuvem
                     const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
@@ -547,21 +555,19 @@
 
                 async cadastrarMoto() {
                     if(this.editandoIndex !== null) {
-                        // Atualiza na Nuvem
                         const motoId = this.motosEstoque[this.editandoIndex].id;
                         await window.banco.from('estoque').update({
                             modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
                         }).eq('id', motoId);
                         alert('Máquina atualizada na Nuvem!');
                     } else {
-                        // Salva Novo na Nuvem
                         await window.banco.from('estoque').insert([{
                             modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
                         }]);
                         alert('Máquina catalogada para o mundo todo!');
                     }
                     this.cancelarEdicao();
-                    this.init(); // Recarrega da nuvem
+                    this.init(); 
                 },
                 
                 editarMoto(index) {
@@ -587,7 +593,6 @@
                     this.ranking.sort((a, b) => b.vendas - a.vendas);
                     localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
                     
-                    // Remove da Nuvem
                     await window.banco.from('estoque').delete().eq('id', motoId);
                     alert('Venda Confirmada! Removido do estoque global.');
                     this.init();
