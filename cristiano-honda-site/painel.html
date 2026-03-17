@@ -431,7 +431,7 @@
         function arkheCrm() {
             return {
                 // ===================================
-                // MÁGICA: LOGIN E CONTROLE DE ACESSOS
+                // LOGIN E CONTROLE DE ACESSOS
                 // ===================================
                 usuarioLogado: false,
                 nomeUsuario: '',
@@ -440,14 +440,14 @@
                 senhaInput: '',
 
                 usuariosPermitidos: [
-                    { nome: 'Cristiano', senha: '1010', tipo: 'Diretor', telefone: '5531998303054' },
-                    { nome: 'Nathan', senha: '2020', tipo: 'Vendedor', telefone: '5531999976103' },
-                    { nome: 'Samuel', senha: '3030', tipo: 'Vendedor', telefone: '5531996719737' },
-                    { nome: 'Gustavo', senha: '0000', tipo: 'Vendedor', telefone: '5531995280992' },
-                    { nome: 'Kawhan', senha: '4040', tipo: 'Vendedor', telefone: '5531997614673' },
-                    { nome: 'Moises', senha: '5050', tipo: 'Vendedor', telefone: '553193385312' },
-                    { nome: 'Avelar', senha: '6060', tipo: 'Vendedor', telefone: '5531972634277' },
-                    { nome: 'Ronan', senha: '7070', tipo: 'Vendedor', telefone: '5531972498347' }
+                    { nome: 'Cristiano', senha: '1010', tipo: 'Diretor' },
+                    { nome: 'Nathan', senha: '2020', tipo: 'Vendedor' },
+                    { nome: 'Samuel', senha: '3030', tipo: 'Vendedor' },
+                    { nome: 'Gustavo', senha: '0000', tipo: 'Vendedor' },
+                    { nome: 'Kawhan', senha: '4040', tipo: 'Vendedor' },
+                    { nome: 'Moises', senha: '5050', tipo: 'Vendedor' },
+                    { nome: 'Avelar', senha: '6060', tipo: 'Vendedor' },
+                    { nome: 'Ronan', senha: '7070', tipo: 'Vendedor' }
                 ],
 
                 efetuarLogin() {
@@ -460,7 +460,7 @@
                         this.fazerLogin(user.nome, user.tipo);
                     } else {
                         alert('Senha incorreta! Tente novamente.');
-                        this.senhaInput = ''; // Limpa a senha se errar
+                        this.senhaInput = ''; 
                     }
                 },
                 
@@ -469,11 +469,7 @@
                     this.tipoUsuario = tipo;
                     this.usuarioLogado = true;
                     this.senhaInput = ''; 
-                    
-                    // MÁGICA DO LINK: Cria o link exclusivo com HTTPS e o nome do vendedor!
-                    this.meuLink = `https://cristianohonda-site.vercel.app/simulacao.html?vendedor=${nome}`;
-                    
-                    this.init(); // Atualiza os dados de leads do Supabase
+                    this.init(); 
                 },
                 
                 sair() {
@@ -485,7 +481,7 @@
                 },
 
                 // ===================================
-                // DADOS DO SISTEMA E FILTROS
+                // DADOS DO SISTEMA E NUVEM
                 // ===================================
                 rotaAtiva: 'dashboard',
                 meuLink: 'cristianohonda-site.vercel.app/simulacao.html',
@@ -500,15 +496,8 @@
 
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 leads: [],
-                
-                getLeadsFiltrados() {
-                    // Diretor vê tudo. Vendedor vê só o dele ou os que vieram do site "soltos"
-                    if(this.tipoUsuario === 'Diretor') return this.leads;
-                    return this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
-                },
-                
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
-                motosEstoque: JSON.parse(localStorage.getItem('arkhe_estoque')) || [],
+                motosEstoque: [], // Agora vem da nuvem!
                 
                 ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
                     { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
@@ -516,75 +505,68 @@
                     { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
                 ],
 
+                getLeadsFiltrados() {
+                    if(this.tipoUsuario === 'Diretor') return this.leads;
+                    return this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
+                },
+
                 async init() {
-                    const { data, error } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
-                    if (data) {
-                        this.leads = data;
-                    }
+                    // Puxa Leads
+                    const { data: leadsData } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
+                    if (leadsData) this.leads = leadsData;
+                    
+                    // Puxa Estoque da Nuvem
+                    const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
+                    if (estoqueData) this.motosEstoque = estoqueData;
                 },
 
                 async adicionarLead() {
-                    const { data, error } = await window.banco.from('leads').insert([{
-                        nome: this.novoLead.nome, 
-                        moto: this.novoLead.moto, 
-                        telefone: this.novoLead.telefone, 
-                        status: this.novoLead.status,
-                        vendedor: this.nomeUsuario // Etiqueta o lead com o nome do vendedor!
-                    }]).select();
-
-                    if (data && data.length > 0) this.leads.unshift(data[0]);
+                    await window.banco.from('leads').insert([{
+                        nome: this.novoLead.nome, moto: this.novoLead.moto, telefone: this.novoLead.telefone, status: this.novoLead.status, vendedor: this.nomeUsuario
+                    }]);
                     this.novoLead = { nome: '', moto: '', telefone: '', status: 'Análise' };
+                    this.init();
                 },
 
                 async atualizarStatus(lead) {
                     await window.banco.from('leads').update({ status: lead.status }).eq('id', lead.id);
                 },
 
-                salvarDadosLocais() {
-                    localStorage.setItem('arkhe_estoque', JSON.stringify(this.motosEstoque));
-                    localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
-                },
-
-                // LÓGICA DE FOTOS E ESTOQUE
                 processarFoto(event) {
                     const files = event.target.files;
                     if(files.length === 0) return;
-                    
                     for(let i = 0; i < files.length; i++) {
-                        if (this.novaMoto.fotos.length >= 4) {
-                            alert("Você pode adicionar no máximo 4 fotos por anúncio!");
-                            break;
-                        }
+                        if (this.novaMoto.fotos.length >= 4) { alert("Máximo de 4 fotos!"); break; }
                         const reader = new FileReader();
-                        reader.onload = (e) => {
-                            this.novaMoto.fotos.push(e.target.result);
-                        };
+                        reader.onload = (e) => { this.novaMoto.fotos.push(e.target.result); };
                         reader.readAsDataURL(files[i]);
                     }
                 },
                 
-                removerFotoPreview(index) {
-                    this.novaMoto.fotos.splice(index, 1);
-                },
+                removerFotoPreview(index) { this.novaMoto.fotos.splice(index, 1); },
 
-                cadastrarMoto() {
+                async cadastrarMoto() {
                     if(this.editandoIndex !== null) {
-                        this.motosEstoque[this.editandoIndex] = { ...this.novaMoto };
-                        this.editandoIndex = null;
-                        alert('Máquina atualizada com sucesso!');
+                        // Atualiza na Nuvem
+                        const motoId = this.motosEstoque[this.editandoIndex].id;
+                        await window.banco.from('estoque').update({
+                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
+                        }).eq('id', motoId);
+                        alert('Máquina atualizada na Nuvem!');
                     } else {
-                        this.motosEstoque.unshift({ ...this.novaMoto });
-                        alert('Máquina catalogada na vitrine!');
+                        // Salva Novo na Nuvem
+                        await window.banco.from('estoque').insert([{
+                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
+                        }]);
+                        alert('Máquina catalogada para o mundo todo!');
                     }
-                    this.novaMoto = { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] };
-                    this.mostrarFormulario = false;
-                    this.salvarDadosLocais();
+                    this.cancelarEdicao();
+                    this.init(); // Recarrega da nuvem
                 },
                 
                 editarMoto(index) {
                     let motoSelecionada = { ...this.motosEstoque[index] };
                     if(!motoSelecionada.fotos) motoSelecionada.fotos = motoSelecionada.foto ? [motoSelecionada.foto] : [];
-                    
                     this.novaMoto = motoSelecionada;
                     this.editandoIndex = index;
                     this.mostrarFormulario = true;
@@ -597,38 +579,34 @@
                     this.mostrarFormulario = false;
                 },
 
-                venderMoto(index) {
+                async venderMoto(index) {
+                    const motoId = this.motosEstoque[index].id;
                     let vendedorAtual = this.ranking.find(v => v.nome === this.nomeUsuario);
-                    // Se o vendedor atual ainda não estiver no ranking, a gente adiciona ele agora
-                    if(!vendedorAtual) {
-                        vendedorAtual = { nome: this.nomeUsuario, vendas: 0 };
-                        this.ranking.push(vendedorAtual);
-                    }
-                    
+                    if(!vendedorAtual) { vendedorAtual = { nome: this.nomeUsuario, vendas: 0 }; this.ranking.push(vendedorAtual); }
                     vendedorAtual.vendas += 1;
                     this.ranking.sort((a, b) => b.vendas - a.vendas);
+                    localStorage.setItem('arkhe_ranking', JSON.stringify(this.ranking));
                     
-                    this.motosEstoque.splice(index, 1);
-                    this.salvarDadosLocais();
-                    alert('Venda Confirmada! O painel acaba de atualizar o Ranking da Loja 🏆');
+                    // Remove da Nuvem
+                    await window.banco.from('estoque').delete().eq('id', motoId);
+                    alert('Venda Confirmada! Removido do estoque global.');
+                    this.init();
                 },
 
-                excluirErro(index) {
-                    if(confirm('Apagar registro incorreto? (Isso não contará como venda)')) {
-                        this.motosEstoque.splice(index, 1);
-                        this.salvarDadosLocais();
+                async excluirErro(index) {
+                    if(confirm('Apagar registro da nuvem?')) {
+                        const motoId = this.motosEstoque[index].id;
+                        await window.banco.from('estoque').delete().eq('id', motoId);
+                        this.init();
                     }
                 },
 
-                resetarEstoque() {
-                    if(confirm('ATENÇÃO: Limpar vitrine?')) {
-                        this.motosEstoque = [];
-                        this.salvarDadosLocais();
-                    }
+                async resetarEstoque() {
+                    alert("Atenção: O reset global de nuvem deve ser feito deletando as motos uma a uma ou limpando a tabela direto no Supabase por segurança.");
                 },
                 
                 copiarLink() {
-                    navigator.clipboard.writeText(this.meuLink);
+                    navigator.clipboard.writeText(this.meuLink + '?vendedor=' + this.nomeUsuario);
                     alert('Link copiado! Mande pro cliente preencher a ficha.');
                 }
             }
