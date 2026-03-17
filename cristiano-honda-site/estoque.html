@@ -42,6 +42,11 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
         [x-cloak] { display: none !important; }
+        
+        /* Ocultar scrollbar da lista de vendedores mantendo funcionalidade */
+        .scroll-consultores::-webkit-scrollbar { width: 4px; }
+        .scroll-consultores::-webkit-scrollbar-track { background: transparent; }
+        .scroll-consultores::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased selection:bg-premium-nivus selection:text-white" x-data="vitrinePublica()">
@@ -144,7 +149,7 @@
                                 <p class="text-3xl font-light text-slate-800 tracking-tight leading-none">R$ <span class="font-black" x-text="moto.preco"></span></p>
                             </div>
                             
-                            <button @click="tenhoInteresse(moto.modelo)" class="w-full flex items-center justify-center gap-2 bg-premium-dark text-white hover:bg-black py-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-xl group">
+                            <button @click="abrirModalInteresse(moto.modelo)" class="w-full flex items-center justify-center gap-2 bg-premium-dark text-white hover:bg-black py-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-xl group">
                                 <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                                 Tenho Interesse
                             </button>
@@ -204,10 +209,142 @@
         </div>
     </footer>
 
+    <div x-show="modalAberto" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" x-transition.opacity style="display: none;" x-cloak>
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl flex flex-col" @click.away="fecharModal()">
+            
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-premium-bg">
+                <div>
+                    <h3 class="text-lg font-black text-premium-text">Falar com Consultor</h3>
+                    <p class="text-xs text-premium-muted mt-1 font-medium">Estou interessado(a) na: <span class="font-black text-premium-honda uppercase tracking-wide" x-text="motoSelecionada"></span></p>
+                </div>
+                <button @click="fecharModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-2 max-h-[60vh] overflow-y-auto scroll-consultores bg-white">
+                
+                <button @click="enviarWhatsApp('5531998303054')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-cristiano.JPG" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Cristiano</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531999976103')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-nathan.JPG" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Nathan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531996719737')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-samuel.JPG" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Samuel</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531995280992')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-gustavo.JPG" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Gustavo</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-kawhan.JPG" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Kawhan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-moises.JPG" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Moises</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-avelar.JPG" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Avelar</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                <div class="h-px w-full bg-slate-100 my-0.5"></div>
+
+                <button @click="enviarWhatsApp('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors duration-300 group text-left">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 group-hover:border-premium-honda transition-colors flex items-center justify-center">
+                        <img src="foto-ronan.JPG" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-premium-text font-bold text-sm">Ronan</h4>
+                        <p class="text-premium-muted text-xs font-medium">Consultor Especialista</p>
+                    </div>
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:bg-[#25D366] group-hover:text-white transition-colors">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg>
+                    </div>
+                </button>
+                
+            </div>
+        </div>
+    </div>
+
     <script>
         function vitrinePublica() {
             return {
                 motosEstoque: [],
+                modalAberto: false,
+                motoSelecionada: '',
 
                 async init() {
                     const { data, error } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
@@ -232,8 +369,20 @@
                     }
                 },
 
-                tenhoInteresse(modeloMoto) {
-                    window.location.href = `index.html#contato`;
+                abrirModalInteresse(modelo) {
+                    this.motoSelecionada = modelo;
+                    this.modalAberto = true;
+                },
+
+                fecharModal() {
+                    this.modalAberto = false;
+                    this.motoSelecionada = '';
+                },
+
+                enviarWhatsApp(telefone) {
+                    const texto = `Olá! Vi a moto *${this.motoSelecionada}* no estoque do site e tenho interesse. Podemos conversar?`;
+                    window.open(`https://wa.me/${telefone}?text=${texto}`, '_blank');
+                    this.fecharModal();
                 }
             }
         }
