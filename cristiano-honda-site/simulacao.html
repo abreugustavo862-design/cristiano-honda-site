@@ -138,15 +138,14 @@
                     ref1Nome: '', ref1Cel: '', ref1Relacao: '',
                     ref2Nome: '', ref2Cel: '', ref2Relacao: '',
                     
-                    // MÁGICA DO ESTOQUE DINÂMICO
                     modeloDesejado: '',
                     motosNoEstoque: [], 
                     
                     openMenu: false,
 
                     async init() {
-                        // Busca as motos direto do estoque na nuvem pra popular o botão!
-                        const { data, error } = await window.banco.from('estoque').select('id, modelo').order('created_at', { ascending: false });
+                        // MÁGICA ATUALIZADA: Agora puxa o Modelo, a Placa e o Preço
+                        const { data, error } = await window.banco.from('estoque').select('id, modelo, placa, preco').order('created_at', { ascending: false });
                         if(data) {
                             this.motosNoEstoque = data;
                         }
@@ -161,6 +160,7 @@
 
                         await window.banco.from('leads').insert([{
                             nome: this.nomeCompleto,
+                            // O modelo desejado agora já carrega a placa e o preço junto!
                             moto: 'Financiamento: ' + this.modeloDesejado + ' (' + this.parcelas + 'x)',
                             telefone: this.celular || 'Sem número',
                             status: 'Análise',
@@ -381,7 +381,10 @@
                                     <option value="" disabled selected>Selecione a máquina do nosso estoque...</option>
                                     
                                     <template x-for="moto in motosNoEstoque" :key="moto.id">
-                                        <option :value="moto.modelo" x-text="moto.modelo"></option>
+                                        <option 
+                                            :value="moto.modelo + ' (Placa: ' + moto.placa + ' | R$ ' + moto.preco + ')'" 
+                                            x-text="moto.modelo + ' - Placa: ' + moto.placa + ' - R$ ' + moto.preco"
+                                        ></option>
                                     </template>
                                     
                                     <option value="Outro Modelo / Encomenda">Outro Modelo / Encomenda</option>
