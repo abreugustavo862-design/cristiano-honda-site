@@ -426,7 +426,7 @@
         </main>
     </div>
 
-   <script>
+    <script>
         function arkheCrm() {
             return {
                 // ===================================
@@ -498,6 +498,7 @@
                 topRanking: [],
                 leads: [],
                 
+                novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
                 motosEstoque: [], 
                 
@@ -508,10 +509,13 @@
                 ],
 
                 atualizarDashboard() {
+                    // MÁGICA DA HIERARQUIA CONSERTADA AQUI!
                     if(this.tipoUsuario === 'Diretor') {
+                        // Diretor vê TUDO (inclusive os leads que vieram do site sem vendedor)
                         this.leadsVisiveis = this.leads;
                     } else {
-                        this.leadsVisiveis = this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
+                        // Vendedor SÓ VÊ os leads que têm exatamente o nome dele na etiqueta
+                        this.leadsVisiveis = this.leads.filter(l => l.vendedor === this.nomeUsuario);
                     }
                     
                     this.stats.total = this.leadsVisiveis.length;
@@ -530,21 +534,26 @@
                 },
 
                 async init() {
-                    // Puxa Leads
                     const { data: leadsData } = await window.banco.from('leads').select('*').order('created_at', { ascending: false });
-                    if (leadsData) {
-                        this.leads = leadsData;
-                    }
+                    if (leadsData) this.leads = leadsData;
                     
-                    // Puxa Estoque da Nuvem
                     const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
+                    
                     if (estoqueData) {
-                        // MÁGICA ANTI-TRAVAMENTO: Traduz o formato da foto
                         this.motosEstoque = estoqueData.map(moto => {
-                            if (typeof moto.fotos === 'string') {
-                                try { moto.fotos = JSON.parse(moto.fotos); } catch(e) { moto.fotos = []; }
+                            let arraySeguro = [];
+                            if (Array.isArray(moto.fotos)) {
+                                arraySeguro = moto.fotos;
+                            } else if (typeof moto.fotos === 'string') {
+                                try { 
+                                    let parsed = JSON.parse(moto.fotos); 
+                                    if(Array.isArray(parsed)) arraySeguro = parsed;
+                                    else if (moto.fotos.includes('data:image')) arraySeguro = [moto.fotos];
+                                } catch(e) { 
+                                    if (moto.fotos.includes('data:image')) arraySeguro = [moto.fotos];
+                                }
                             }
-                            if (!moto.fotos) moto.fotos = [];
+                            moto.fotos = arraySeguro;
                             return moto;
                         });
                     }
@@ -552,12 +561,26 @@
                     this.atualizarDashboard(); 
                 },
 
+                // CADASTRO DE LEADS BLINDADO
                 async adicionarLead() {
-                    await window.banco.from('leads').insert([{
-                        nome: this.novoLead.nome, moto: this.novoLead.moto, telefone: this.novoLead.telefone, status: this.novoLead.status, vendedor: this.nomeUsuario
-                    }]);
-                    this.novoLead = { nome: '', moto: '', telefone: '', status: 'Análise' };
-                    this.init();
+                    try {
+                        const { error } = await window.banco.from('leads').insert([{
+                            nome: this.novoLead.nome, 
+                            moto: this.novoLead.moto, 
+                            telefone: this.novoLead.telefone, 
+                            status: this.novoLead.status, 
+                            vendedor: this.nomeUsuario
+                        }]);
+                        
+                        if(error) throw error;
+                        
+                        alert('Ficha do cliente salva com sucesso!');
+                        this.novoLead = { nome: '', moto: '', telefone: '', status: 'Análise' };
+                        await this.init(); // Atualiza a tela com o novo lead
+                    } catch (e) {
+                        console.error("Erro ao salvar lead:", e);
+                        alert('Erro ao salvar a ficha. Verifique sua conexão.');
+                    }
                 },
 
                 async atualizarStatus(lead) {
@@ -573,12 +596,13 @@
                             img.onload = () => {
                                 const canvas = document.createElement('canvas');
                                 const MAX_WIDTH = 800; 
-                                const scaleSize = MAX_WIDTH / img.width;
-                                canvas.width = MAX_WIDTH;
+                                let scaleSize = MAX_WIDTH / img.width;
+                                if(scaleSize > 1) scaleSize = 1; 
+                                canvas.width = img.width * scaleSize;
                                 canvas.height = img.height * scaleSize;
                                 const ctx = canvas.getContext('2d');
                                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                                resolve(canvas.toDataURL('image/jpeg', 0.6)); 
+                                resolve(canvas.toDataURL('image/jpeg', 0.5)); 
                             };
                             img.src = e.target.result;
                         };
@@ -599,7 +623,6 @@
                 removerFotoPreview(index) { this.novaMoto.fotos.splice(index, 1); },
 
                 async cadastrarMoto() {
-                    // Proteção: Salvar fotos como JSON stringificado pra nuvem não errar o formato
                     const fotosSeguras = JSON.stringify(this.novaMoto.fotos);
 
                     if(this.editandoIndex !== null) {
@@ -612,7 +635,7 @@
                         await window.banco.from('estoque').insert([{
                             modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: fotosSeguras
                         }]);
-                        alert('Máquina catalogada para o mundo todo!');
+                        alert('Máquina catalogada com sucesso!');
                     }
                     this.cancelarEdicao();
                     this.init(); 
@@ -620,7 +643,7 @@
                 
                 editarMoto(index) {
                     let motoSelecionada = { ...this.motosEstoque[index] };
-                    if(!motoSelecionada.fotos) motoSelecionada.fotos = motoSelecionada.foto ? [motoSelecionada.foto] : [];
+                    if(!motoSelecionada.fotos) motoSelecionada.fotos = [];
                     this.novaMoto = motoSelecionada;
                     this.editandoIndex = index;
                     this.mostrarFormulario = true;
@@ -654,7 +677,7 @@
                 },
 
                 async resetarEstoque() {
-                    alert("Atenção: O reset global de nuvem deve ser feito deletando as motos uma a uma ou limpando a tabela direto no Supabase por segurança.");
+                    alert("Atenção: Por segurança, exclua os registros direto nos cartões.");
                 },
                 
                 copiarLink() {
@@ -664,6 +687,3 @@
             }
         }
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
-</body>
-</html>
