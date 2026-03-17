@@ -74,6 +74,8 @@
                     </a>
                     
                 </div>
+            </div>
+        </div>
     </nav>
 
     <section class="pt-40 pb-12 bg-white border-b border-gray-100">
@@ -126,7 +128,7 @@
             
             <div 
                 x-data="{
-                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || 'Site Geral',
+                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || '',
                     
                     entrada: '', parcelas: '48',
                     nomeCompleto: '', cpf: '', rg: '', nascimento: '', nomeMae: '', celular: '', email: '',
@@ -136,25 +138,38 @@
                     ref1Nome: '', ref1Cel: '', ref1Relacao: '',
                     ref2Nome: '', ref2Cel: '', ref2Relacao: '',
                     
+                    // MÁGICA DO ESTOQUE DINÂMICO
+                    modeloDesejado: '',
+                    motosNoEstoque: [], 
+                    
                     openMenu: false,
 
+                    async init() {
+                        // Busca as motos direto do estoque na nuvem pra popular o botão!
+                        const { data, error } = await window.banco.from('estoque').select('id, modelo').order('created_at', { ascending: false });
+                        if(data) {
+                            this.motosNoEstoque = data;
+                        }
+                    },
+
                     async enviarFicha(telefone) {
-                        if(this.nomeCompleto.trim() === '' || this.cpf.trim() === '') {
-                            alert('Por favor, preencha pelo menos Nome e CPF para iniciarmos a análise.');
+                        if(this.nomeCompleto.trim() === '' || this.cpf.trim() === '' || this.modeloDesejado === '') {
+                            alert('Por favor, preencha Nome, CPF e a Máquina Desejada para iniciarmos a análise.');
                             this.openMenu = false;
                             return;
                         }
 
                         await window.banco.from('leads').insert([{
                             nome: this.nomeCompleto,
-                            moto: 'Financiamento (' + this.parcelas + 'x)',
+                            moto: 'Financiamento: ' + this.modeloDesejado + ' (' + this.parcelas + 'x)',
                             telefone: this.celular || 'Sem número',
                             status: 'Análise',
                             vendedor: this.vendedorDaUrl
                         }]);
                         
                         let texto = `*FICHA CADASTRAL - FINANCIAMENTO SITE*%0A%0A`;
-                        texto += `*🏁 CONDIÇÕES DESEJADAS*%0AEntrada: R$ ${this.entrada}%0AParcelas: ${this.parcelas}x%0A%0A`;
+                        texto += `*🏁 MÁQUINA DESEJADA:* ${this.modeloDesejado}%0A`;
+                        texto += `Entrada: R$ ${this.entrada}%0AParcelas: ${this.parcelas}x%0A%0A`;
                         texto += `*👤 DADOS PESSOAIS*%0ANome: ${this.nomeCompleto}%0ACPF: ${this.cpf}%0ARG: ${this.rg}%0ANascimento: ${this.nascimento}%0AMãe: ${this.nomeMae}%0ACelular: ${this.celular}%0AEmail: ${this.email}%0A%0A`;
                         texto += `*🚦 PERFIL*%0ACNH: ${this.cnh}%0ANome Sujo: ${this.nomeSujo} ${this.nomeSujo === 'Sim' ? '(R$ ' + this.valorSujo + ')' : ''}%0A%0A`;
                         texto += `*📍 ENDEREÇO RESIDENCIAL*%0ACEP: ${this.cep}%0A${this.rua}, ${this.numero} - ${this.bairro}, ${this.cidade}%0A%0A`;
@@ -353,6 +368,30 @@
                     </div>
                 </div>
 
+                <div class="mb-12">
+                    <h3 class="text-xl font-medium text-premium-dark border-b border-gray-100 pb-3 mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-premium-honda" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        O Seu Sonho
+                    </h3>
+                    <div class="grid grid-cols-1 gap-6 mb-6">
+                        <div class="w-full">
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Qual máquina você deseja financiar?</label>
+                            <div class="relative">
+                                <select x-model="modeloDesejado" class="w-full bg-premium-offwhite border border-gray-200 rounded-xl px-4 py-4 outline-none focus:border-premium-honda text-sm font-medium text-premium-dark appearance-none cursor-pointer">
+                                    <option value="" disabled selected>Selecione a máquina do nosso estoque...</option>
+                                    
+                                    <template x-for="moto in motosNoEstoque" :key="moto.id">
+                                        <option :value="moto.modelo" x-text="moto.modelo"></option>
+                                    </template>
+                                    
+                                    <option value="Outro Modelo / Encomenda">Outro Modelo / Encomenda</option>
+                                </select>
+                                <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="border-t border-gray-100 pt-10 flex flex-col items-center">
                     
                     <div class="relative w-full max-w-sm flex flex-col items-center">
@@ -401,28 +440,28 @@
 
                             <button @click="enviarFicha('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
                                 <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-kawhan.JPG" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Kawhan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
+                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Kawhan</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
                                 <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-moises.JPG" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Moises</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
+                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Moises</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
                                 <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-avelar.JPG" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Avelar</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
+                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Avelar</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
                                 <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-ronan.JPG" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
-                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Ronan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
+                                <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Ronan</h4><p class="text-premium-gray text-xs font-light">Consultor Especialista</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                         </div>
@@ -431,28 +470,61 @@
                             Enviar Ficha para Aprovação
                             <svg class="w-5 h-5 transition-transform duration-300" :class="{'rotate-180': openMenu}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                         </button>
+                        
                     </div>
-                </div>
 
+                </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-premium-dark text-white pt-16 pb-8 border-t border-white/10 mt-10">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
-            <h2 class="text-2xl font-light tracking-tight mb-4 uppercase">
-                Cristiano <span class="font-bold text-premium-honda">Honda</span>
-            </h2>
-            <div class="pt-8 border-t border-white/10 flex flex-col items-center gap-2">
-                <p class="text-gray-500 text-xs font-light tracking-wide">&copy; 2026 Cristiano Honda. Todos os direitos reservados.</p>
-                <p class="text-gray-500 text-xs font-light tracking-wide">Desenvolvido por <a href="#" class="text-white hover:text-premium-honda transition-colors">Arkhe Tech</a></p>
+    <footer class="bg-premium-dark text-white pt-24 pb-10 border-t border-white/10 mt-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8 mb-20">
+                <div class="md:col-span-5 lg:col-span-4">
+                    <h2 class="text-3xl font-light tracking-tight mb-6 uppercase">
+                        Cristiano <span class="font-bold text-premium-honda">Honda</span>
+                    </h2>
+                    <p class="text-gray-400 font-light text-sm leading-relaxed mb-8 max-w-sm">
+                        O padrão definitivo em duas rodas. Mais que uma concessionária, somos a realização do seu objetivo com segurança absoluta e exclusividade em Minas Gerais.
+                    </p>
+                </div>
+
+                <div class="md:col-span-3 lg:col-span-2 lg:col-start-6">
+                    <h4 class="text-white font-semibold mb-6 uppercase tracking-[0.15em] text-xs">Acelere</h4>
+                    <ul class="space-y-4">
+                        <li><a href="index.html#quem-somos" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Quem Somos Nós</a></li>
+                        <li><a href="estoque.html" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Estoque de Máquinas</a></li>
+                        <li><a href="simulacao.html" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Simulação de Crédito</a></li>
+                        <li><a href="consorcio.html" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Consórcio Nacional</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:col-span-4 lg:col-span-3">
+                    <h4 class="text-white font-semibold mb-6 uppercase tracking-[0.15em] text-xs">Atendimento</h4>
+                    <ul class="space-y-4">
+                        <li><a href="index.html#showrooms" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Localize Nossas Lojas</a></li>
+                        <li><a href="index.html#contato" class="text-gray-400 hover:text-white hover:translate-x-1 inline-block transition-transform text-sm font-light">Consultoria VIP</a></li>
+                    </ul>
+                </div>
             </div>
+
+            <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-xs font-light tracking-wide">
+                    © 2026 Cristiano Honda. Todos os direitos reservados.
+                </p>
+                <p class="text-gray-500 text-xs font-light flex items-center gap-1.5 tracking-wide">
+                    Desenvolvido por <span class="text-white font-medium">Arkhe Tech</span>
+                </p>
+            </div>
+            
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ once: true, offset: 50 });
+        AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
     </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
