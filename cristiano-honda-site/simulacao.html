@@ -15,7 +15,6 @@
         const supabaseUrl = 'https://uskuxnireyjvldgvngzq.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVza3V4bmlyZXlqdmxkZ3ZuZ3pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzkyODYsImV4cCI6MjA4OTI1NTI4Nn0.X-6a0ZBPuL0CLC8tSrSNJn8UrOemGhse4IAfetKvLGc';
         
-        // Conexão batizada como "banco" para não dar conflito!
         window.banco = window.supabase.createClient(supabaseUrl, supabaseKey);
     </script>
 
@@ -127,20 +126,13 @@
             
             <div 
                 x-data="{
-                    // MÁGICA: Lê o vendedor da URL automaticamente
-                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || '',
+                    vendedorDaUrl: new URLSearchParams(window.location.search).get('vendedor') || 'Site Geral',
                     
-                    // Condições
                     entrada: '', parcelas: '48',
-                    // Dados Pessoais
                     nomeCompleto: '', cpf: '', rg: '', nascimento: '', nomeMae: '', celular: '', email: '',
-                    // CNH e Restrições
                     cnh: 'Não Tenho', nomeSujo: 'Não', valorSujo: '',
-                    // Endereço
                     cep: '', rua: '', numero: '', bairro: '', cidade: '',
-                    // Profissional
                     tipoProfissao: 'Fichado', profissao: '', tempoTrabalho: '', telTrabalho: '', renda: '', endTrabalho: '',
-                    // Referências
                     ref1Nome: '', ref1Cel: '', ref1Relacao: '',
                     ref2Nome: '', ref2Cel: '', ref2Relacao: '',
                     
@@ -153,7 +145,6 @@
                             return;
                         }
 
-                        // MÁGICA REAL: Enviando o Lead pro Supabase da Arkhe Tech com o dono da venda
                         await window.banco.from('leads').insert([{
                             nome: this.nomeCompleto,
                             moto: 'Financiamento (' + this.parcelas + 'x)',
@@ -161,7 +152,7 @@
                             status: 'Análise',
                             vendedor: this.vendedorDaUrl
                         }]);
-
+                        
                         let texto = `*FICHA CADASTRAL - FINANCIAMENTO SITE*%0A%0A`;
                         texto += `*🏁 CONDIÇÕES DESEJADAS*%0AEntrada: R$ ${this.entrada}%0AParcelas: ${this.parcelas}x%0A%0A`;
                         texto += `*👤 DADOS PESSOAIS*%0ANome: ${this.nomeCompleto}%0ACPF: ${this.cpf}%0ARG: ${this.rg}%0ANascimento: ${this.nascimento}%0AMãe: ${this.nomeMae}%0ACelular: ${this.celular}%0AEmail: ${this.email}%0A%0A`;
@@ -381,56 +372,56 @@
                             <p class="text-xs font-semibold text-premium-gray uppercase tracking-widest mb-2 mt-2 px-2 sticky top-0 bg-white z-10 py-1">Enviar ficha para:</p>
                             
                             <button @click="enviarFicha('5531998303054')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-cristiano.jpg" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-cristiano.JPG" alt="Cristiano" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Cristiano</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531999976103')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-nathan.jpg" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-nathan.JPG" alt="Nathan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Nathan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531996719737')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-samuel.jpg" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-samuel.JPG" alt="Samuel" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Samuel</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531995280992')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-gustavo.jpg" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-gustavo.JPG" alt="Gustavo" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Gustavo</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531997614673')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-kawhan.jpg" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-kawhan.JPG" alt="Kawhan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Kawhan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('553193385312')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-moises.jpg" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-moises.JPG" alt="Moises" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Moises</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531972634277')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-avelar.jpg" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-avelar.JPG" alt="Avelar" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Avelar</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
                             <div class="h-px w-full bg-gray-50 my-0.5"></div>
 
                             <button @click="enviarFicha('5531972498347')" class="w-full flex items-center gap-4 p-3 hover:bg-premium-offwhite rounded-2xl transition-colors duration-300 group text-left">
-                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-ronan.jpg" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
+                                <div class="w-12 h-12 shrink-0 rounded-full bg-gray-100 overflow-hidden border border-gray-200 flex items-center justify-center"><img src="foto-ronan.JPG" alt="Ronan" class="w-full h-full object-cover text-[10px] text-gray-400"></div>
                                 <div class="flex-1"><h4 class="text-premium-dark font-medium text-sm">Ronan</h4><p class="text-premium-gray text-xs font-light">Especialista em Crédito</p></div>
                                 <div class="w-8 h-8 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]"><svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347Z"/></svg></div>
                             </button>
