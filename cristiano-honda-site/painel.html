@@ -426,7 +426,7 @@
         </main>
     </div>
 
-    <script>
+   <script>
         function arkheCrm() {
             return {
                 // ===================================
@@ -493,7 +493,6 @@
                     if(this.rotaAtiva === 'estoque') return 'Controle de Estoque';
                 },
 
-                // O SEGREDO DO DESEMPENHO: Variáveis Pré-Calculadas
                 stats: { total: 0, analise: 0, aprovados: 0, vendas: 0 },
                 leadsVisiveis: [],
                 topRanking: [],
@@ -509,14 +508,12 @@
                 ],
 
                 atualizarDashboard() {
-                    // Filtra Leads 1 única vez
                     if(this.tipoUsuario === 'Diretor') {
                         this.leadsVisiveis = this.leads;
                     } else {
                         this.leadsVisiveis = this.leads.filter(l => l.vendedor === this.nomeUsuario || !l.vendedor);
                     }
                     
-                    // Calcula as estatísticas
                     this.stats.total = this.leadsVisiveis.length;
                     this.stats.analise = this.leadsVisiveis.filter(l => l.status === 'Análise').length;
                     this.stats.aprovados = this.leadsVisiveis.filter(l => l.status === 'Aprovado').length;
@@ -528,7 +525,6 @@
                         this.stats.vendas = v ? v.vendas : 0;
                     }
 
-                    // Ordena e pega os top 5 para evitar loop infinito na tela
                     this.ranking.sort((a, b) => b.vendas - a.vendas);
                     this.topRanking = this.ranking.slice(0, 5);
                 },
@@ -543,10 +539,17 @@
                     // Puxa Estoque da Nuvem
                     const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
                     if (estoqueData) {
-                        this.motosEstoque = estoqueData;
+                        // MÁGICA ANTI-TRAVAMENTO: Traduz o formato da foto
+                        this.motosEstoque = estoqueData.map(moto => {
+                            if (typeof moto.fotos === 'string') {
+                                try { moto.fotos = JSON.parse(moto.fotos); } catch(e) { moto.fotos = []; }
+                            }
+                            if (!moto.fotos) moto.fotos = [];
+                            return moto;
+                        });
                     }
 
-                    this.atualizarDashboard(); // Atualiza a tela de forma leve
+                    this.atualizarDashboard(); 
                 },
 
                 async adicionarLead() {
@@ -562,7 +565,6 @@
                     this.atualizarDashboard();
                 },
 
-                // COMPRESSOR DE IMAGENS INVISÍVEL (MÁGICA PARA NÃO TRAVAR O BANCO)
                 comprimirImagem(file) {
                     return new Promise((resolve) => {
                         const reader = new FileReader();
@@ -570,13 +572,13 @@
                             const img = new Image();
                             img.onload = () => {
                                 const canvas = document.createElement('canvas');
-                                const MAX_WIDTH = 800; // Reduz a imagem para o tamanho ideal da tela
+                                const MAX_WIDTH = 800; 
                                 const scaleSize = MAX_WIDTH / img.width;
                                 canvas.width = MAX_WIDTH;
                                 canvas.height = img.height * scaleSize;
                                 const ctx = canvas.getContext('2d');
                                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                                resolve(canvas.toDataURL('image/jpeg', 0.6)); // Comprime para 60% da qualidade
+                                resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                             };
                             img.src = e.target.result;
                         };
@@ -589,8 +591,6 @@
                     if(files.length === 0) return;
                     for(let i = 0; i < files.length; i++) {
                         if (this.novaMoto.fotos.length >= 4) { alert("Máximo de 4 fotos!"); break; }
-                        
-                        // Passa a foto pelo compressor antes de ir pro código
                         const fotoComprimida = await this.comprimirImagem(files[i]);
                         this.novaMoto.fotos.push(fotoComprimida);
                     }
@@ -599,15 +599,18 @@
                 removerFotoPreview(index) { this.novaMoto.fotos.splice(index, 1); },
 
                 async cadastrarMoto() {
+                    // Proteção: Salvar fotos como JSON stringificado pra nuvem não errar o formato
+                    const fotosSeguras = JSON.stringify(this.novaMoto.fotos);
+
                     if(this.editandoIndex !== null) {
                         const motoId = this.motosEstoque[this.editandoIndex].id;
                         await window.banco.from('estoque').update({
-                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
+                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: fotosSeguras
                         }).eq('id', motoId);
                         alert('Máquina atualizada na Nuvem!');
                     } else {
                         await window.banco.from('estoque').insert([{
-                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: this.novaMoto.fotos
+                            modelo: this.novaMoto.modelo, cilindrada: this.novaMoto.cilindrada, ano: this.novaMoto.ano, preco: this.novaMoto.preco, km: this.novaMoto.km, cor: this.novaMoto.cor, placa: this.novaMoto.placa, fotos: fotosSeguras
                         }]);
                         alert('Máquina catalogada para o mundo todo!');
                     }
@@ -651,7 +654,7 @@
                 },
 
                 async resetarEstoque() {
-                    alert("Atenção: Para evitar acidentes com a nuvem, o Diretor deve excluir as motos clicando em 'Errada' na ficha ou direto no painel Supabase.");
+                    alert("Atenção: O reset global de nuvem deve ser feito deletando as motos uma a uma ou limpando a tabela direto no Supabase por segurança.");
                 },
                 
                 copiarLink() {
