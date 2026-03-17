@@ -212,10 +212,16 @@
                 motosEstoque: [],
 
                 async init() {
-                    // Puxa o estoque AO VIVO da nuvem do Supabase
                     const { data, error } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
                     if (data) {
-                        this.motosEstoque = data;
+                        // MÁGICA ANTI-TRAVAMENTO
+                        this.motosEstoque = data.map(moto => {
+                            if (typeof moto.fotos === 'string') {
+                                try { moto.fotos = JSON.parse(moto.fotos); } catch(e) { moto.fotos = []; }
+                            }
+                            if (!moto.fotos) moto.fotos = [];
+                            return moto;
+                        });
                     }
                 },
 
