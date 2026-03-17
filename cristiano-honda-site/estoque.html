@@ -209,23 +209,17 @@
     <script>
         function vitrinePublica() {
             return {
-                // Puxa o estoque direto da memória local (a mesma que o painel.html usa)
                 motosEstoque: [],
 
-                init() {
-                    // Pega os dados salvos ou deixa o array vazio
-                    this.motosEstoque = JSON.parse(localStorage.getItem('arkhe_estoque')) || [];
+                async init() {
+                    // Puxa o estoque AO VIVO da nuvem do Supabase
+                    const { data, error } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
+                    if (data) {
+                        this.motosEstoque = data;
+                    }
                 },
 
-                // Ação do Botão "Tenho Interesse"
                 tenhoInteresse(modeloMoto) {
-                    // Como não sabemos qual vendedor atende na vitrine pública geral,
-                    // podemos mandar o cara direto para o menu de contato do index
-                    // OU, se você tiver um número geral da loja, trocar pelo seu zap aqui:
-                    const textoPadrao = `Olá! Estava navegando no estoque do site e tenho interesse na ${modeloMoto}. Poderia me dar mais informações?`;
-                    
-                    // Vai mandar o cliente para a página inicial na seção de escolher o vendedor
-                    // (Você também pode colocar window.open('https://wa.me/5531999999999?text=' + textoPadrao) se quiser um número direto)
                     window.location.href = `index.html#contato`;
                 }
             }
