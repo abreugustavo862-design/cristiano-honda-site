@@ -157,6 +157,58 @@
                         </div>
                     </div>
 
+                    <div x-show="tipoUsuario === 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm mb-8 w-full">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-premium-text flex items-center gap-2">
+                                <svg class="w-5 h-5 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                Relatório de Conversão do Funil (Geral da Loja)
+                            </h3>
+                            <span class="text-[10px] bg-slate-100 border border-slate-200 px-3 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Visão Executiva</span>
+                        </div>
+                        
+                        <div class="space-y-5">
+                            <div class="flex items-center">
+                                <span class="w-32 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Leads Gerados</span>
+                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                    <div class="bg-slate-800 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? 100 : 0}%`"></div>
+                                </div>
+                                <span class="w-10 text-right font-black text-slate-800 text-lg" x-text="stats.total"></span>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <span class="w-32 text-[11px] font-bold text-yellow-600 uppercase tracking-wider">Em Análise</span>
+                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                    <div class="bg-yellow-400 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.analise / stats.total) * 100 : 0}%`"></div>
+                                </div>
+                                <span class="w-10 text-right font-black text-yellow-600 text-lg" x-text="stats.analise"></span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <span class="w-32 text-[11px] font-bold text-green-600 uppercase tracking-wider">Aprovados</span>
+                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                    <div class="bg-green-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.aprovados / stats.total) * 100 : 0}%`"></div>
+                                </div>
+                                <span class="w-10 text-right font-black text-green-600 text-lg" x-text="stats.aprovados"></span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <span class="w-32 text-[11px] font-bold text-red-500 uppercase tracking-wider">Reprovados</span>
+                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                    <div class="bg-red-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.reprovados / stats.total) * 100 : 0}%`"></div>
+                                </div>
+                                <span class="w-10 text-right font-black text-red-500 text-lg" x-text="stats.reprovados"></span>
+                            </div>
+
+                            <div class="flex items-center pt-3 border-t border-slate-100">
+                                <span class="w-32 text-[11px] font-bold text-premium-nivus uppercase tracking-wider">Vendas Fechadas</span>
+                                <div class="flex-1 bg-slate-100 h-5 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                    <div class="bg-premium-nivus h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.vendas / stats.total) * 100 : 0}%`"></div>
+                                </div>
+                                <span class="w-10 text-right font-black text-premium-nivus text-xl" x-text="stats.vendas"></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                         
                         <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm">
@@ -454,9 +506,6 @@
     <script>
         function arkheCrm() {
             return {
-                // ===================================
-                // LOGIN E CONTROLE DE ACESSOS
-                // ===================================
                 usuarioLogado: false,
                 nomeUsuario: '',
                 tipoUsuario: '', 
@@ -504,9 +553,6 @@
                     this.rotaAtiva = 'dashboard';
                 },
 
-                // ===================================
-                // DADOS DO SISTEMA E NUVEM
-                // ===================================
                 rotaAtiva: 'dashboard',
                 meuLink: 'cristianohonda-site.vercel.app/simulacao.html',
                 mostrarFormulario: false,
@@ -518,21 +564,17 @@
                     if(this.rotaAtiva === 'estoque') return 'Controle de Estoque';
                 },
 
-                stats: { total: 0, analise: 0, aprovados: 0, vendas: 0 },
+                stats: { total: 0, analise: 0, aprovados: 0, reprovados: 0, vendas: 0 },
                 leadsVisiveis: [],
                 topRanking: [],
-                rankingLeads: [], // NOVO RANKING AQUI
+                rankingLeads: [],
                 leads: [],
                 
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
                 motosEstoque: [], 
                 
-                ranking: JSON.parse(localStorage.getItem('arkhe_ranking')) || [
-                    { nome: 'Cristiano', vendas: 14 }, { nome: 'Samuel', vendas: 11 },
-                    { nome: 'Gustavo', vendas: 8 }, { nome: 'Nathan', vendas: 7 },
-                    { nome: 'Moises', vendas: 5 }, { nome: 'Avelar', vendas: 4 }
-                ],
+                ranking: [],
 
                 atualizarDashboard() {
                     if(this.tipoUsuario === 'Diretor') {
@@ -544,7 +586,16 @@
                     this.stats.total = this.leadsVisiveis.length;
                     this.stats.analise = this.leadsVisiveis.filter(l => l.status === 'Análise').length;
                     this.stats.aprovados = this.leadsVisiveis.filter(l => l.status === 'Aprovado').length;
+                    this.stats.reprovados = this.leadsVisiveis.filter(l => l.status === 'Reprovado').length;
                     
+                    const todosOsNomes = this.usuariosPermitidos.map(u => u.nome);
+                    let rankingSalvo = JSON.parse(localStorage.getItem('arkhe_ranking')) || [];
+                    
+                    this.ranking = todosOsNomes.map(nome => {
+                        let achou = rankingSalvo.find(r => r.nome === nome);
+                        return achou ? achou : { nome: nome, vendas: 0 };
+                    }).sort((a, b) => b.vendas - a.vendas);
+
                     if(this.tipoUsuario === 'Diretor') {
                         this.stats.vendas = this.ranking.reduce((acc, curr) => acc + curr.vendas, 0);
                     } else {
@@ -552,21 +603,23 @@
                         this.stats.vendas = v ? v.vendas : 0;
                     }
 
-                    this.ranking.sort((a, b) => b.vendas - a.vendas);
-                    this.topRanking = this.ranking.slice(0, 5);
+                    this.topRanking = this.ranking;
 
-                    // MÁGICA: CÁLCULO DO RANKING DE CAPTAÇÃO
                     let contagemLeads = {};
+                    todosOsNomes.forEach(n => contagemLeads[n] = 0);
+                    
                     this.leads.forEach(l => {
                         let vend = l.vendedor || 'Sem Vendedor';
                         if(vend !== 'Sem Vendedor' && vend !== 'Site / Geral' && vend !== '') {
-                            if(!contagemLeads[vend]) contagemLeads[vend] = 0;
-                            contagemLeads[vend]++;
+                            if(contagemLeads[vend] !== undefined) {
+                                contagemLeads[vend]++;
+                            }
                         }
                     });
-                    this.rankingLeads = Object.keys(contagemLeads).map(nome => {
+
+                    this.rankingLeads = todosOsNomes.map(nome => {
                         return { nome: nome, leads: contagemLeads[nome] };
-                    }).sort((a, b) => b.leads - a.leads).slice(0, 5);
+                    }).sort((a, b) => b.leads - a.leads);
                 },
 
                 async init() {
