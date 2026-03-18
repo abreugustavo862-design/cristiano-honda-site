@@ -75,12 +75,13 @@
     </div>
 
     <div x-show="usuarioLogado" class="flex w-full h-full relative" x-cloak>
+        
         <aside class="w-64 bg-premium-panel border-r border-premium-border flex flex-col hidden md:flex shadow-sm z-20">
             <div class="h-20 flex items-center px-6 border-b border-premium-border">
                 <h1 class="text-xl font-bold tracking-tight text-premium-text">Arkhe<span class="text-premium-honda font-light">CRM</span></h1>
             </div>
 
-            <nav x-data="{ menuMobileAberto: false }" class="flex-1 px-4 py-6 space-y-2">
+            <nav class="flex-1 px-4 py-6 space-y-2">
                 <p class="px-2 text-[10px] font-bold text-premium-muted uppercase tracking-widest mb-4">Gestão Comercial</p>
                 
                 <button @click="rotaAtiva = 'dashboard'" :class="rotaAtiva === 'dashboard' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors">
@@ -113,220 +114,286 @@
             </div>
         </aside>
 
-        <main class="flex-1 flex flex-col h-screen overflow-hidden bg-premium-bg relative z-10">
+        <div x-show="menuPainelAberto" style="display: none;" class="fixed inset-0 z-[100] flex md:hidden" x-cloak>
             
-            <header class="h-20 glass-panel border-b border-premium-border flex items-center justify-between px-8">
-                <div class="flex items-center gap-4">
-                    <h2 class="text-xl font-bold text-premium-text" x-text="tituloPagina()"></h2>
+            <div x-show="menuPainelAberto" 
+                 x-transition.opacity.duration.300ms
+                 @click="menuPainelAberto = false"
+                 class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+            <div x-show="menuPainelAberto" 
+                 x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="-translate-x-full"
+                 x-transition:enter-end="translate-x-0"
+                 x-transition:leave="transition ease-in duration-200 transform"
+                 x-transition:leave-start="translate-x-0"
+                 x-transition:leave-end="-translate-x-full"
+                 class="relative w-[280px] h-full bg-premium-panel shadow-2xl flex flex-col">
+                
+                <div class="h-20 flex items-center justify-between px-6 border-b border-premium-border">
+                    <h1 class="text-xl font-bold tracking-tight text-premium-text">Arkhe<span class="text-premium-honda font-light">CRM</span></h1>
+                    <button @click="menuPainelAberto = false" class="text-slate-400 hover:text-red-500 bg-slate-50 p-2 rounded-full">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <nav class="flex-1 px-4 py-6 space-y-3 overflow-y-auto">
+                    <p class="px-2 text-[10px] font-bold text-premium-muted uppercase tracking-widest mb-4">Gestão Comercial</p>
+                    
+                    <button @click="rotaAtiva = 'dashboard'; menuPainelAberto = false" :class="rotaAtiva === 'dashboard' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors">
+                        <svg class="w-5 h-5" :class="rotaAtiva === 'dashboard' ? 'text-premium-nivus' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        Visão Geral
+                    </button>
+
+                    <button @click="rotaAtiva = 'leads'; menuPainelAberto = false" :class="rotaAtiva === 'leads' ? 'bg-premium-honda text-white shadow-[0_4px_15px_-3px_rgba(228,0,43,0.4)] font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center justify-between px-3 py-3 rounded-lg text-sm transition-colors">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <span x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></span>
+                        </div>
+                        <span :class="rotaAtiva === 'leads' ? 'bg-white/20 text-white' : 'bg-slate-200 text-premium-text'" class="text-xs px-2 py-0.5 rounded-md font-bold" x-text="stats.total"></span>
+                    </button>
+
+                    <button @click="rotaAtiva = 'estoque'; menuPainelAberto = false" :class="rotaAtiva === 'estoque' ? 'bg-slate-100 text-premium-text font-semibold' : 'text-premium-muted hover:bg-slate-50 hover:text-premium-text'" class="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm transition-colors mt-2">
+                        <svg class="w-5 h-5" :class="rotaAtiva === 'estoque' ? 'text-premium-nivus' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Estoque da Loja
+                    </button>
+                </nav>
+
+                <div class="p-4 border-t border-premium-border">
+                    <div class="flex items-center gap-3 bg-premium-bg p-3 rounded-xl border border-premium-border">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-white text-xs shadow-md" :class="tipoUsuario === 'Diretor' ? 'bg-slate-800' : 'bg-premium-honda'" x-text="nomeUsuario ? nomeUsuario.charAt(0) : ''"></div>
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-sm font-bold text-premium-text truncate" x-text="nomeUsuario"></p>
+                            <p class="text-[10px] text-premium-muted truncate uppercase tracking-wider" x-text="tipoUsuario === 'Diretor' ? 'Visão Diretoria' : 'Consultor Premium'"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden bg-premium-bg relative z-10 w-full">
+            
+            <header class="h-20 glass-panel border-b border-premium-border flex items-center justify-between px-4 md:px-8 shrink-0">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <button @click="menuPainelAberto = true" class="md:hidden text-premium-text p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                    <h2 class="text-lg md:text-xl font-bold text-premium-text" x-text="tituloPagina()"></h2>
                 </div>
                 
-                <div class="flex items-center gap-4">
-                    <button @click="copiarLink()" x-show="tipoUsuario !== 'Diretor'" class="flex items-center gap-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-premium-nivus px-4 py-2 rounded-lg text-sm font-medium transition-all group">
+                <div class="flex items-center gap-2 md:gap-4">
+                    <button @click="copiarLink()" x-show="tipoUsuario !== 'Diretor'" class="hidden sm:flex items-center gap-2 bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-premium-nivus px-4 py-2 rounded-lg text-sm font-medium transition-all group">
                         <span class="text-premium-muted group-hover:text-premium-text transition-colors">Meu Link:</span>
-                        <span class="text-premium-text truncate w-32" x-text="meuLink + '?vendedor=' + nomeUsuario"></span>
+                        <span class="text-premium-text truncate w-24 md:w-32" x-text="meuLink + '?vendedor=' + nomeUsuario"></span>
                         <svg class="w-4 h-4 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                     </button>
-                    <button @click="sair()" class="bg-red-50 text-premium-honda border border-red-100 hover:bg-premium-honda hover:text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors">Sair</button>
+                    
+                    <button @click="copiarLink()" x-show="tipoUsuario !== 'Diretor'" class="sm:hidden flex items-center justify-center bg-slate-50 border border-slate-200 hover:bg-slate-100 px-3 py-2 rounded-lg transition-all">
+                        <svg class="w-5 h-5 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+
+                    <button @click="sair()" class="bg-red-50 text-premium-honda border border-red-100 hover:bg-premium-honda hover:text-white px-3 md:px-4 py-2 rounded-lg text-sm font-bold transition-colors">Sair</button>
                 </div>
             </header>
 
-            <div class="flex-1 overflow-y-auto p-8 scroll-smooth">
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth w-full">
                 
                 <div x-show="rotaAtiva === 'dashboard'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-blue-100 rounded-bl-full -z-10"></div>
-                            <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></p>
-                            <p class="text-4xl font-light text-premium-text" x-text="stats.total"></p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 w-full">
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 relative overflow-hidden shadow-sm">
+                            <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-blue-100 rounded-bl-full -z-10"></div>
+                            <p class="text-premium-muted text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2" x-text="tipoUsuario === 'Diretor' ? 'Leads da Loja' : 'Meus Leads'"></p>
+                            <p class="text-3xl md:text-4xl font-light text-premium-text" x-text="stats.total"></p>
                         </div>
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
-                            <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Em Análise</p>
-                            <p class="text-4xl font-light text-yellow-600" x-text="stats.analise"></p>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 relative overflow-hidden shadow-sm">
+                            <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-yellow-100 rounded-bl-full -z-10"></div>
+                            <p class="text-premium-muted text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2">Em Análise</p>
+                            <p class="text-3xl md:text-4xl font-light text-yellow-600" x-text="stats.analise"></p>
                         </div>
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-bl-full -z-10"></div>
-                            <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2">Aprovados</p>
-                            <p class="text-4xl font-light text-green-600" x-text="stats.aprovados"></p>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 relative overflow-hidden shadow-sm">
+                            <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-green-100 rounded-bl-full -z-10"></div>
+                            <p class="text-premium-muted text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2">Aprovados</p>
+                            <p class="text-3xl md:text-4xl font-light text-green-600" x-text="stats.aprovados"></p>
                         </div>
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
-                            <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
-                            <p class="text-premium-muted text-[11px] font-bold uppercase tracking-widest mb-2" x-text="tipoUsuario === 'Diretor' ? 'Vendas Globais' : 'Minhas Vendas'"></p>
-                            <p class="text-4xl font-semibold text-premium-nivus" x-text="stats.vendas"></p>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 relative overflow-hidden shadow-sm border-b-4 border-b-premium-nivus">
+                            <div class="absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 bg-blue-50 rounded-bl-full -z-10"></div>
+                            <p class="text-premium-muted text-[9px] md:text-[11px] font-bold uppercase tracking-widest mb-1 md:mb-2" x-text="tipoUsuario === 'Diretor' ? 'Vendas Globais' : 'Minhas Vendas'"></p>
+                            <p class="text-3xl md:text-4xl font-semibold text-premium-nivus" x-text="stats.vendas"></p>
                         </div>
                     </div>
 
-                    <div x-show="tipoUsuario === 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm mb-8 w-full">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-bold text-premium-text flex items-center gap-2">
-                                <svg class="w-5 h-5 text-premium-nivus" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                                Relatório de Conversão do Funil (Geral da Loja)
+                    <div x-show="tipoUsuario === 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm mb-8 w-full overflow-hidden">
+                        <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-2">
+                            <h3 class="text-base md:text-lg font-bold text-premium-text flex items-center gap-2">
+                                <svg class="w-5 h-5 text-premium-nivus shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                Conversão do Funil
                             </h3>
-                            <span class="text-[10px] bg-slate-100 border border-slate-200 px-3 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Visão Executiva</span>
+                            <span class="text-[9px] md:text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider shrink-0">Visão Executiva</span>
                         </div>
                         
                         <div class="space-y-5">
                             <div class="flex items-center">
-                                <span class="w-32 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Leads Gerados</span>
-                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">Leads Gerados</span>
+                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
                                     <div class="bg-slate-800 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? 100 : 0}%`"></div>
                                 </div>
-                                <span class="w-10 text-right font-black text-slate-800 text-lg" x-text="stats.total"></span>
+                                <span class="w-8 md:w-10 text-right font-black text-slate-800 text-base md:text-lg" x-text="stats.total"></span>
                             </div>
                             
                             <div class="flex items-center">
-                                <span class="w-32 text-[11px] font-bold text-yellow-600 uppercase tracking-wider">Em Análise</span>
-                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-yellow-600 uppercase tracking-wider truncate">Em Análise</span>
+                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
                                     <div class="bg-yellow-400 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.analise / stats.total) * 100 : 0}%`"></div>
                                 </div>
-                                <span class="w-10 text-right font-black text-yellow-600 text-lg" x-text="stats.analise"></span>
+                                <span class="w-8 md:w-10 text-right font-black text-yellow-600 text-base md:text-lg" x-text="stats.analise"></span>
                             </div>
 
                             <div class="flex items-center">
-                                <span class="w-32 text-[11px] font-bold text-green-600 uppercase tracking-wider">Aprovados</span>
-                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-green-600 uppercase tracking-wider truncate">Aprovados</span>
+                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
                                     <div class="bg-green-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.aprovados / stats.total) * 100 : 0}%`"></div>
                                 </div>
-                                <span class="w-10 text-right font-black text-green-600 text-lg" x-text="stats.aprovados"></span>
+                                <span class="w-8 md:w-10 text-right font-black text-green-600 text-base md:text-lg" x-text="stats.aprovados"></span>
                             </div>
 
                             <div class="flex items-center">
-                                <span class="w-32 text-[11px] font-bold text-red-500 uppercase tracking-wider">Reprovados</span>
-                                <div class="flex-1 bg-slate-100 h-4 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-red-500 uppercase tracking-wider truncate">Reprovados</span>
+                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
                                     <div class="bg-red-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.reprovados / stats.total) * 100 : 0}%`"></div>
                                 </div>
-                                <span class="w-10 text-right font-black text-red-500 text-lg" x-text="stats.reprovados"></span>
+                                <span class="w-8 md:w-10 text-right font-black text-red-500 text-base md:text-lg" x-text="stats.reprovados"></span>
                             </div>
 
                             <div class="flex items-center pt-3 border-t border-slate-100">
-                                <span class="w-32 text-[11px] font-bold text-premium-nivus uppercase tracking-wider">Vendas Fechadas</span>
-                                <div class="flex-1 bg-slate-100 h-5 rounded-full overflow-hidden mx-4 relative shadow-inner">
+                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-premium-nivus uppercase tracking-wider truncate">Vendas Fechadas</span>
+                                <div class="flex-1 bg-slate-100 h-4 md:h-5 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
                                     <div class="bg-premium-nivus h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.vendas / stats.total) * 100 : 0}%`"></div>
                                 </div>
-                                <span class="w-10 text-right font-black text-premium-nivus text-xl" x-text="stats.vendas"></span>
+                                <span class="w-8 md:w-10 text-right font-black text-premium-nivus text-lg md:text-xl" x-text="stats.vendas"></span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
                         
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm">
-                            <h3 class="text-lg font-bold text-premium-text mb-6 flex items-center justify-between">
-                                Ranking de Vendas 🏆
-                                <span class="text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm w-full">
+                            <h3 class="text-base md:text-lg font-bold text-premium-text mb-4 md:mb-6 flex items-center justify-between">
+                                Ranking Vendas 🏆
+                                <span class="text-[9px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
                             </h3>
-                            <div class="space-y-3">
+                            <div class="space-y-2 md:space-y-3">
                                 <template x-for="(vendedor, index) in topRanking" :key="vendedor.nome">
-                                    <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-yellow-50/50 border border-yellow-100 border-l-4 border-l-yellow-400' : ''">
-                                        <div class="flex items-center gap-4">
-                                            <span class="text-slate-400 font-black w-4 text-center text-lg" x-text="index + 1"></span>
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600" x-text="vendedor.nome.charAt(0)"></div>
-                                            <p class="text-sm font-bold text-premium-text">
+                                    <div class="flex items-center justify-between p-2 md:p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-yellow-50/50 border border-yellow-100 border-l-4 border-l-yellow-400' : ''">
+                                        <div class="flex items-center gap-3 md:gap-4">
+                                            <span class="text-slate-400 font-black w-4 text-center text-sm md:text-lg" x-text="index + 1"></span>
+                                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 flex items-center justify-center text-xs md:text-sm font-bold text-slate-600 shrink-0" x-text="vendedor.nome.charAt(0)"></div>
+                                            <p class="text-xs md:text-sm font-bold text-premium-text truncate">
                                                 <span x-text="vendedor.nome"></span>
-                                                <span x-show="vendedor.nome === nomeUsuario && tipoUsuario !== 'Diretor'" class="text-[9px] text-premium-nivus ml-2 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wider font-black">Você</span>
+                                                <span x-show="vendedor.nome === nomeUsuario && tipoUsuario !== 'Diretor'" class="hidden sm:inline-block text-[9px] text-premium-nivus ml-2 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wider font-black">Você</span>
                                             </p>
                                         </div>
-                                        <div class="text-sm font-black text-premium-text"><span x-text="vendedor.vendas"></span> <span class="text-[10px] text-premium-muted font-semibold uppercase">Motos</span></div>
+                                        <div class="text-xs md:text-sm font-black text-premium-text shrink-0"><span x-text="vendedor.vendas"></span> <span class="text-[8px] md:text-[10px] text-premium-muted font-semibold uppercase">Motos</span></div>
                                     </div>
                                 </template>
                             </div>
                         </div>
 
-                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-6 shadow-sm">
-                            <h3 class="text-lg font-bold text-premium-text mb-6 flex items-center justify-between">
-                                Ranking de Captação 🎯
-                                <span class="text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm w-full">
+                            <h3 class="text-base md:text-lg font-bold text-premium-text mb-4 md:mb-6 flex items-center justify-between">
+                                Ranking Leads 🎯
+                                <span class="text-[9px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider">Ao Vivo</span>
                             </h3>
-                            <div class="space-y-3">
+                            <div class="space-y-2 md:space-y-3">
                                 <template x-for="(vendedor, index) in rankingLeads" :key="vendedor.nome">
-                                    <div class="flex items-center justify-between p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-blue-50/50 border border-blue-100 border-l-4 border-l-premium-nivus' : ''">
-                                        <div class="flex items-center gap-4">
-                                            <span class="text-slate-400 font-black w-4 text-center text-lg" x-text="index + 1"></span>
-                                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600" x-text="vendedor.nome.charAt(0)"></div>
-                                            <p class="text-sm font-bold text-premium-text">
+                                    <div class="flex items-center justify-between p-2 md:p-3 rounded-xl border border-transparent hover:border-slate-200 hover:bg-slate-50 transition-colors" :class="index === 0 ? 'bg-blue-50/50 border border-blue-100 border-l-4 border-l-premium-nivus' : ''">
+                                        <div class="flex items-center gap-3 md:gap-4">
+                                            <span class="text-slate-400 font-black w-4 text-center text-sm md:text-lg" x-text="index + 1"></span>
+                                            <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-200 flex items-center justify-center text-xs md:text-sm font-bold text-slate-600 shrink-0" x-text="vendedor.nome.charAt(0)"></div>
+                                            <p class="text-xs md:text-sm font-bold text-premium-text truncate">
                                                 <span x-text="vendedor.nome"></span>
-                                                <span x-show="vendedor.nome === nomeUsuario && tipoUsuario !== 'Diretor'" class="text-[9px] text-premium-nivus ml-2 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wider font-black">Você</span>
+                                                <span x-show="vendedor.nome === nomeUsuario && tipoUsuario !== 'Diretor'" class="hidden sm:inline-block text-[9px] text-premium-nivus ml-2 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded uppercase tracking-wider font-black">Você</span>
                                             </p>
                                         </div>
-                                        <div class="text-sm font-black text-premium-text"><span x-text="vendedor.leads"></span> <span class="text-[10px] text-premium-muted font-semibold uppercase">Leads</span></div>
+                                        <div class="text-xs md:text-sm font-black text-premium-text shrink-0"><span x-text="vendedor.leads"></span> <span class="text-[8px] md:text-[10px] text-premium-muted font-semibold uppercase">Leads</span></div>
                                     </div>
                                 </template>
+                                <div x-show="rankingLeads.length === 0" class="text-center text-[10px] md:text-xs text-premium-muted mt-4 font-medium">Nenhum lead captado ainda.</div>
                             </div>
                         </div>
 
-                        <div class="bg-gradient-to-br from-[#E8F0FE] to-[#FFFFFF] border border-[#DCE4F0] rounded-2xl p-8 flex flex-col justify-center relative overflow-hidden shadow-sm">
-                            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-[#0EA5E9]/10 blur-3xl rounded-full"></div>
-                            <h3 class="text-2xl font-light text-slate-800 mb-2" x-show="tipoUsuario !== 'Diretor'">O Poder do <span class="font-bold text-premium-nivus">Link Mágico.</span></h3>
-                            <h3 class="text-2xl font-light text-slate-800 mb-2" x-show="tipoUsuario === 'Diretor'">Gestão de <span class="font-bold text-slate-800">Alta Performance.</span></h3>
+                        <div class="bg-gradient-to-br from-[#E8F0FE] to-[#FFFFFF] border border-[#DCE4F0] rounded-2xl p-6 md:p-8 flex flex-col justify-center relative overflow-hidden shadow-sm w-full">
+                            <div class="absolute -bottom-10 -right-10 w-32 h-32 md:w-40 md:h-40 bg-[#0EA5E9]/10 blur-3xl rounded-full"></div>
+                            <h3 class="text-xl md:text-2xl font-light text-slate-800 mb-2" x-show="tipoUsuario !== 'Diretor'">O Poder do <span class="font-bold text-premium-nivus">Link Mágico.</span></h3>
+                            <h3 class="text-xl md:text-2xl font-light text-slate-800 mb-2" x-show="tipoUsuario === 'Diretor'">Gestão de <span class="font-bold text-slate-800">Alta Performance.</span></h3>
                             
-                            <p class="text-premium-muted text-sm leading-relaxed mb-6 font-medium" x-show="tipoUsuario !== 'Diretor'">
-                                Toda vez que um cliente preenche a ficha de Simulação ou Consórcio pelo seu link, você ganha +1 Ponto de Captação e o lead cai direto no seu funil. Espalhe seu link!
+                            <p class="text-premium-muted text-xs md:text-sm leading-relaxed mb-6 font-medium" x-show="tipoUsuario !== 'Diretor'">
+                                Toda vez que um cliente preenche a ficha pelo seu link, você ganha +1 Ponto de Captação e o lead cai direto no seu funil. Espalhe seu link!
                             </p>
-                            <p class="text-premium-muted text-sm leading-relaxed mb-6 font-medium" x-show="tipoUsuario === 'Diretor'">
+                            <p class="text-premium-muted text-xs md:text-sm leading-relaxed mb-6 font-medium" x-show="tipoUsuario === 'Diretor'">
                                 Monitore os leads da equipe, o estoque e os rankings de Vendas e Captação em tempo real de forma centralizada.
                             </p>
                             
-                            <button @click="rotaAtiva = 'leads'" class="bg-premium-text text-white font-bold px-6 py-3 rounded-xl text-sm w-max hover:bg-slate-700 hover:shadow-lg transition-all">
+                            <button @click="rotaAtiva = 'leads'" class="bg-premium-text text-white font-bold px-4 md:px-6 py-2.5 md:py-3 rounded-xl text-xs md:text-sm w-max hover:bg-slate-700 hover:shadow-lg transition-all relative z-10">
                                 <span x-text="tipoUsuario === 'Diretor' ? 'Ver Todos os Leads' : 'Acessar Meus Leads'"></span>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div x-show="rotaAtiva === 'leads'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
+                <div x-show="rotaAtiva === 'leads'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="w-full">
                     
-                    <div x-show="tipoUsuario !== 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-sm">
-                        <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end">
+                    <div x-show="tipoUsuario !== 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 mb-8 shadow-sm w-full">
+                        <form @submit.prevent="adicionarLead" class="flex flex-col md:flex-row gap-4 items-end w-full">
                             <div class="flex-1 w-full">
-                                <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Nome do Cliente</label>
+                                <label class="block text-[10px] md:text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Nome do Cliente</label>
                                 <input type="text" x-model="novoLead.nome" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                             </div>
                             <div class="flex-1 w-full">
-                                <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Interesse (Moto)</label>
+                                <label class="block text-[10px] md:text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Interesse</label>
                                 <input type="text" x-model="novoLead.moto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                             </div>
                             <div class="flex-1 w-full">
-                                <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">WhatsApp</label>
+                                <label class="block text-[10px] md:text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">WhatsApp</label>
                                 <input type="text" x-model="novoLead.telefone" required placeholder="(31) 90000-0000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus focus:bg-white text-premium-text transition-all font-medium">
                             </div>
-                            <button type="submit" class="bg-premium-honda text-white font-bold tracking-wide rounded-xl px-8 py-3 text-sm hover:bg-red-700 hover:shadow-lg transition-all w-full md:w-auto">
-                                Salvar Ficha
+                            <button type="submit" class="bg-premium-honda text-white font-bold tracking-wide rounded-xl px-6 md:px-8 py-3 text-sm hover:bg-red-700 hover:shadow-lg transition-all w-full md:w-auto">
+                                Salvar
                             </button>
                         </form>
                     </div>
 
-                    <div class="bg-premium-panel border border-premium-border rounded-2xl overflow-hidden shadow-sm">
-                        <table class="w-full text-left border-collapse whitespace-nowrap">
+                    <div class="bg-premium-panel border border-premium-border rounded-2xl overflow-x-auto shadow-sm w-full">
+                        <table class="w-full text-left border-collapse whitespace-nowrap min-w-[600px]">
                             <thead>
                                 <tr class="bg-slate-50 border-b border-premium-border">
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Cliente</th>
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Máquina Desejada</th>
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest" x-show="tipoUsuario === 'Diretor'">Vendedor Responsável</th>
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest">Status / Funil</th>
-                                    <th class="px-6 py-4 text-[10px] font-bold text-premium-muted uppercase tracking-widest text-right">Ação</th>
+                                    <th class="px-4 md:px-6 py-4 text-[9px] md:text-[10px] font-bold text-premium-muted uppercase tracking-widest">Cliente</th>
+                                    <th class="px-4 md:px-6 py-4 text-[9px] md:text-[10px] font-bold text-premium-muted uppercase tracking-widest">Interesse</th>
+                                    <th class="px-4 md:px-6 py-4 text-[9px] md:text-[10px] font-bold text-premium-muted uppercase tracking-widest" x-show="tipoUsuario === 'Diretor'">Vendedor</th>
+                                    <th class="px-4 md:px-6 py-4 text-[9px] md:text-[10px] font-bold text-premium-muted uppercase tracking-widest">Status</th>
+                                    <th class="px-4 md:px-6 py-4 text-[9px] md:text-[10px] font-bold text-premium-muted uppercase tracking-widest text-right">Ação</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <template x-for="lead in leadsVisiveis" :key="lead.id">
                                     <tr class="border-b border-premium-border hover:bg-slate-50 transition-colors">
-                                        <td class="px-6 py-4">
+                                        <td class="px-4 md:px-6 py-4">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-black uppercase" x-text="lead.nome.charAt(0)"></div>
-                                                <div>
-                                                    <p class="text-sm font-bold text-premium-text" x-text="lead.nome"></p>
-                                                    <p class="text-[11px] font-medium text-premium-muted" x-text="lead.telefone"></p>
+                                                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-black uppercase shrink-0" x-text="lead.nome.charAt(0)"></div>
+                                                <div class="overflow-hidden">
+                                                    <p class="text-xs md:text-sm font-bold text-premium-text truncate" x-text="lead.nome"></p>
+                                                    <p class="text-[10px] md:text-[11px] font-medium text-premium-muted truncate" x-text="lead.telefone"></p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 text-sm font-medium text-slate-700" x-text="lead.moto"></td>
+                                        <td class="px-4 md:px-6 py-4 text-xs md:text-sm font-medium text-slate-700 truncate max-w-[150px]" x-text="lead.moto" :title="lead.moto"></td>
                                         
-                                        <td class="px-6 py-4 text-xs font-bold text-slate-500 uppercase" x-show="tipoUsuario === 'Diretor'">
-                                            <span class="bg-slate-100 border border-slate-200 px-2 py-1 rounded" x-text="lead.vendedor || 'Site / Geral'"></span>
+                                        <td class="px-4 md:px-6 py-4 text-[10px] md:text-xs font-bold text-slate-500 uppercase" x-show="tipoUsuario === 'Diretor'">
+                                            <span class="bg-slate-100 border border-slate-200 px-2 py-1 rounded truncate" x-text="lead.vendedor || 'Site / Geral'"></span>
                                         </td>
 
-                                        <td class="px-6 py-4">
-                                            <select x-model="lead.status" @change="atualizarStatus(lead)" :disabled="tipoUsuario === 'Diretor'" class="text-xs font-bold px-3 py-1.5 rounded-lg outline-none appearance-none border transition-colors shadow-sm"
+                                        <td class="px-4 md:px-6 py-4">
+                                            <select x-model="lead.status" @change="atualizarStatus(lead)" :disabled="tipoUsuario === 'Diretor'" class="text-[10px] md:text-xs font-bold px-2 md:px-3 py-1.5 rounded-lg outline-none appearance-none border transition-colors shadow-sm"
                                                 :class="{'bg-yellow-50 text-yellow-700 border-yellow-200': lead.status === 'Análise', 'bg-green-50 text-green-700 border-green-200': lead.status === 'Aprovado', 'bg-red-50 text-red-700 border-red-200': lead.status === 'Reprovado', 'bg-blue-50 text-blue-700 border-blue-200': lead.status === 'Vendido', 'cursor-pointer': tipoUsuario !== 'Diretor', 'opacity-70 cursor-not-allowed': tipoUsuario === 'Diretor'}">
                                                 <option value="Análise" class="bg-white text-slate-800">⏳ Em Análise</option>
                                                 <option value="Aprovado" class="bg-white text-slate-800">✅ Aprovado</option>
@@ -334,26 +401,26 @@
                                                 <option value="Vendido" class="bg-white text-slate-800">🏆 Vendido</option>
                                             </select>
                                         </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <a :href="'https://wa.me/55' + lead.telefone.replace(/\D/g,'')" target="_blank" class="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 text-green-600 hover:bg-green-600 hover:text-white px-4 py-2 rounded-lg text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+                                        <td class="px-4 md:px-6 py-4 text-right">
+                                            <a :href="'https://wa.me/55' + lead.telefone.replace(/\D/g,'')" target="_blank" class="inline-flex items-center gap-1 bg-green-50 border border-green-200 text-green-600 hover:bg-green-600 hover:text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-[9px] md:text-[11px] font-bold uppercase tracking-wider transition-colors shadow-sm">
                                                 Chamar
                                             </a>
                                         </td>
                                     </tr>
                                 </template>
                                 <tr x-show="leadsVisiveis.length === 0">
-                                    <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-sm">Nenhum lead cadastrado ainda no seu painel. Compartilhe seu link para começar!</td>
+                                    <td colspan="5" class="px-6 py-12 text-center text-premium-muted font-medium text-xs md:text-sm">Nenhum lead cadastrado ainda no seu painel. Compartilhe seu link para começar!</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak>
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-premium-text">Vitrine <span class="font-light">Premium</span></h2>
-                        <div class="flex gap-3">
-                            <button @click="mostrarFormulario = !mostrarFormulario; if(mostrarFormulario) editandoIndex = null;" x-show="tipoUsuario !== 'Diretor'" class="text-[11px] text-white font-bold uppercase tracking-wider px-5 py-2 bg-premium-nivus hover:bg-blue-600 rounded-lg transition-all shadow-md flex items-center gap-2">
+                <div x-show="rotaAtiva === 'estoque'" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="w-full">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                        <h2 class="text-xl md:text-2xl font-bold text-premium-text">Vitrine <span class="font-light">Premium</span></h2>
+                        <div class="flex gap-3 w-full sm:w-auto">
+                            <button @click="mostrarFormulario = !mostrarFormulario; if(mostrarFormulario) editandoIndex = null;" x-show="tipoUsuario !== 'Diretor'" class="w-full sm:w-auto text-[10px] md:text-[11px] text-white font-bold uppercase tracking-wider px-5 py-3 sm:py-2 bg-premium-nivus hover:bg-blue-600 rounded-lg transition-all shadow-md flex items-center justify-center gap-2">
                                 <span x-text="mostrarFormulario && editandoIndex === null ? 'Fechar Formulário' : '+ Nova Máquina'"></span>
                             </button>
                         </div>
@@ -361,41 +428,41 @@
 
                     <div x-show="mostrarFormulario || editandoIndex !== null" 
                          x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
-                         class="bg-premium-panel border border-premium-border rounded-2xl p-6 mb-8 shadow-sm relative">
+                         class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 mb-8 shadow-sm relative w-full">
                         
                         <div class="flex justify-between items-center mb-6">
                             <div class="flex items-center gap-2">
-                                <div class="w-1.5 h-4 bg-premium-nivus rounded-full"></div>
-                                <h2 class="text-xs font-black text-premium-text uppercase tracking-widest" x-text="editandoIndex !== null ? 'Editando Máquina' : 'Catalogar Nova Moto'"></h2>
+                                <div class="w-1 h-4 md:w-1.5 bg-premium-nivus rounded-full"></div>
+                                <h2 class="text-[11px] md:text-xs font-black text-premium-text uppercase tracking-widest" x-text="editandoIndex !== null ? 'Editando Máquina' : 'Catalogar Nova Moto'"></h2>
                             </div>
-                            <button @click="mostrarFormulario = false; cancelarEdicao()" class="text-gray-400 hover:text-red-500 transition-colors">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            <button @click="mostrarFormulario = false; cancelarEdicao()" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                             </button>
                         </div>
                         
-                        <form @submit.prevent="cadastrarMoto" class="space-y-5">
+                        <form @submit.prevent="cadastrarMoto" class="space-y-4 md:space-y-5">
                             <div>
-                                <label class="block text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Fotos da Moto (Máx. 4)</label>
-                                <div class="flex gap-4 overflow-x-auto pb-2">
-                                    <div x-show="novaMoto.fotos.length < 4" class="shrink-0 relative w-24 h-24 bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-premium-nivus rounded-xl flex items-center justify-center group cursor-pointer transition-all">
+                                <label class="block text-[10px] md:text-[11px] font-bold text-premium-muted uppercase tracking-wider mb-2">Fotos da Moto (Máx. 4)</label>
+                                <div class="flex gap-3 md:gap-4 overflow-x-auto pb-2 snap-x">
+                                    <div x-show="novaMoto.fotos.length < 4" class="shrink-0 relative w-20 h-20 md:w-24 md:h-24 bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-premium-nivus rounded-xl flex items-center justify-center group cursor-pointer transition-all snap-start">
                                         <input type="file" accept="image/*" multiple @change="processarFoto" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="Adicione até 4 fotos">
                                         <div class="text-center group-hover:scale-105 transition-transform duration-300">
-                                            <svg class="w-6 h-6 mx-auto text-premium-nivus mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                            <span class="text-[9px] text-slate-500 font-bold tracking-wider uppercase">Adicionar</span>
+                                            <svg class="w-5 h-5 md:w-6 md:h-6 mx-auto text-premium-nivus mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                            <span class="text-[8px] md:text-[9px] text-slate-500 font-bold tracking-wider uppercase">Adicionar</span>
                                         </div>
                                     </div>
                                     <template x-for="(fotoStr, idx) in novaMoto.fotos" :key="idx">
-                                        <div class="shrink-0 relative w-24 h-24 rounded-xl overflow-hidden border border-slate-200 group">
+                                        <div class="shrink-0 relative w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden border border-slate-200 group snap-start">
                                             <img :src="fotoStr" class="w-full h-full object-cover">
-                                            <button type="button" @click.stop="removerFotoPreview(idx)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button type="button" @click.stop="removerFotoPreview(idx)" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                             </button>
                                         </div>
                                     </template>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <div class="col-span-2 md:col-span-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="col-span-1 md:col-span-3">
                                     <input type="text" x-model="novaMoto.modelo" placeholder="Modelo Completo (Ex: Titan 160 S)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                 </div>
                                 <div>
@@ -417,55 +484,72 @@
                                     <input type="text" x-model="novaMoto.preco" placeholder="Preço (R$)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-premium-nivus focus:ring-1 focus:ring-premium-nivus text-premium-text transition-all">
                                 </div>
                             </div>
-                            <div class="pt-2 flex justify-end">
-                                <button type="submit" class="bg-premium-text text-white font-bold rounded-xl px-8 py-3 text-xs tracking-wider uppercase hover:bg-slate-700 shadow-md hover:shadow-lg transition-all" x-text="editandoIndex !== null ? 'Salvar Alterações' : 'Concluir Cadastro'"></button>
+                            <div class="pt-4 md:pt-2 flex justify-end w-full">
+                                <button type="submit" class="w-full md:w-auto bg-premium-text text-white font-bold rounded-xl px-8 py-3.5 md:py-3 text-xs tracking-wider uppercase hover:bg-slate-700 shadow-md hover:shadow-lg transition-all" x-text="editandoIndex !== null ? 'Salvar Alterações' : 'Concluir Cadastro'"></button>
                             </div>
                         </form>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 w-full">
                         <template x-for="(moto, index) in motosEstoque" :key="moto.id || index">
-                            <div class="bg-premium-panel border border-slate-200 rounded-2xl overflow-hidden flex flex-col group hover:border-premium-nivus hover:shadow-lg transition-all duration-300 shadow-sm h-[460px]">
+                            <div class="bg-premium-panel border border-slate-200 rounded-2xl overflow-hidden flex flex-col group hover:border-premium-nivus hover:shadow-lg transition-all duration-300 shadow-sm h-[420px] md:h-[460px]">
                                 
-                                <div x-data="{ slideAtual: 0 }" class="relative h-48 shrink-0 w-full bg-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-100">
+                                <div x-data="{ slideAtual: 0 }" class="relative h-44 md:h-48 shrink-0 w-full bg-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-100">
                                     <template x-if="moto.fotos && moto.fotos.length > 0">
                                         <template x-for="(f, i) in moto.fotos" :key="i">
                                             <img x-show="slideAtual === i" :src="f" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-300">
                                         </template>
                                     </template>
                                     <template x-if="!moto.fotos || moto.fotos.length === 0">
-                                        <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                        <svg class="w-10 h-10 md:w-12 md:h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path></svg>
+                                    </template>
+                                    <template x-if="moto.fotos && moto.fotos.length > 1">
+                                        <div class="absolute inset-0 flex items-center justify-between px-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button @click.stop="slideAtual = slideAtual > 0 ? slideAtual - 1 : moto.fotos.length - 1" class="bg-black/40 hover:bg-premium-nivus text-white rounded-full p-1 md:p-1.5 backdrop-blur-sm transition-colors">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                                            </button>
+                                            <button @click.stop="slideAtual = slideAtual < moto.fotos.length - 1 ? slideAtual + 1 : 0" class="bg-black/40 hover:bg-premium-nivus text-white rounded-full p-1 md:p-1.5 backdrop-blur-sm transition-colors">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+                                            </button>
+                                        </div>
+                                    </template>
+                                    <template x-if="moto.fotos && moto.fotos.length > 1">
+                                        <div class="absolute bottom-2 left-0 w-full flex justify-center gap-1.5 z-10">
+                                            <template x-for="(f, idx) in moto.fotos" :key="idx">
+                                                <div class="w-1.5 h-1.5 rounded-full transition-colors shadow-sm" :class="slideAtual === idx ? 'bg-white scale-125' : 'bg-white/50'"></div>
+                                            </template>
+                                        </div>
                                     </template>
                                     
-                                    <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-green-600 text-[9px] uppercase tracking-widest font-black px-2 py-1 rounded shadow-sm">Disp</div>
-                                    <button @click.stop="editarMoto(index)" x-show="tipoUsuario !== 'Diretor'" class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-700 p-1.5 rounded hover:bg-premium-nivus hover:text-white transition-colors shadow-sm z-20" title="Editar">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                    <div class="absolute top-2 left-2 md:top-3 md:left-3 bg-white/95 backdrop-blur-sm text-green-600 text-[8px] md:text-[9px] uppercase tracking-widest font-black px-2 py-1 rounded shadow-sm">Disp</div>
+                                    <button @click.stop="editarMoto(index)" x-show="tipoUsuario !== 'Diretor'" class="absolute top-2 right-2 md:top-3 md:right-3 bg-white/95 backdrop-blur-sm text-slate-700 p-1.5 rounded hover:bg-premium-nivus hover:text-white transition-colors shadow-sm z-20" title="Editar">
+                                        <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                     </button>
                                 </div>
 
-                                <div class="p-5 flex-1 flex flex-col bg-white">
+                                <div class="p-4 md:p-5 flex-1 flex flex-col bg-white">
                                     <div class="flex justify-between items-start mb-3">
-                                        <h3 class="text-[15px] leading-tight font-black text-premium-text line-clamp-2 pr-2" x-text="moto.modelo"></h3>
-                                        <span class="shrink-0 bg-blue-50 text-premium-nivus font-black text-[10px] px-2 py-1 rounded uppercase tracking-wider" x-text="moto.cilindrada + 'cc'"></span>
+                                        <h3 class="text-sm md:text-[15px] leading-tight font-black text-premium-text line-clamp-2 pr-2" x-text="moto.modelo"></h3>
+                                        <span class="shrink-0 bg-blue-50 text-premium-nivus font-black text-[9px] md:text-[10px] px-2 py-1 rounded uppercase tracking-wider" x-text="moto.cilindrada + 'cc'"></span>
                                     </div>
-                                    <div class="flex flex-wrap gap-1.5 mb-3">
-                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[9px] px-1.5 py-0.5 rounded font-bold" x-text="moto.ano"></span>
-                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[9px] px-1.5 py-0.5 rounded font-bold" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
-                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[9px] px-1.5 py-0.5 rounded font-bold capitalize" x-text="moto.cor"></span>
-                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase" x-text="moto.placa"></span>
+                                    <div class="flex flex-wrap gap-1 md:gap-1.5 mb-3">
+                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-bold" x-text="moto.ano"></span>
+                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-bold" x-text="moto.km == '0' ? '0 KM' : moto.km + ' km'"></span>
+                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-bold capitalize" x-text="moto.cor"></span>
+                                        <span class="bg-slate-50 border border-slate-200 text-slate-600 text-[8px] md:text-[9px] px-1.5 py-0.5 rounded font-bold uppercase" x-text="moto.placa"></span>
                                     </div>
-                                    <div class="mt-auto mb-4">
-                                        <p class="text-[8px] text-premium-muted font-bold uppercase tracking-widest mb-0.5">Valor à vista</p>
-                                        <p class="text-2xl font-light text-slate-800 tracking-tight leading-none">R$ <span class="font-bold" x-text="moto.preco"></span></p>
+                                    <div class="mt-auto mb-3 md:mb-4">
+                                        <p class="text-[7px] md:text-[8px] text-premium-muted font-bold uppercase tracking-widest mb-0.5">Valor à vista</p>
+                                        <p class="text-xl md:text-2xl font-light text-slate-800 tracking-tight leading-none">R$ <span class="font-bold" x-text="moto.preco"></span></p>
                                     </div>
                                     
                                     <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100" x-show="tipoUsuario !== 'Diretor'">
-                                        <button @click.stop="venderMoto(index)" class="flex items-center justify-center gap-1 bg-green-50 border border-green-200 text-green-700 hover:bg-green-600 hover:text-white py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                        <button @click.stop="venderMoto(index)" class="flex items-center justify-center gap-1 bg-green-50 border border-green-200 text-green-700 hover:bg-green-600 hover:text-white py-1.5 md:py-2 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-wider transition-all">
+                                            <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                             Vendida
                                         </button>
-                                        <button @click.stop="excluirErro(index)" class="flex items-center justify-center gap-1 bg-red-50 border border-red-100 text-red-600 hover:bg-red-600 hover:text-white py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <button @click.stop="excluirErro(index)" class="flex items-center justify-center gap-1 bg-red-50 border border-red-100 text-red-600 hover:bg-red-600 hover:text-white py-1.5 md:py-2 rounded-lg text-[9px] md:text-[10px] font-black uppercase tracking-wider transition-all">
+                                            <svg class="w-3 h-3 md:w-3.5 md:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                             Errada
                                         </button>
                                     </div>
@@ -473,8 +557,8 @@
                             </div>
                         </template>
                         
-                        <div x-show="motosEstoque.length === 0" class="col-span-full py-20 text-center border-2 border-dashed border-slate-200 bg-white/50 rounded-2xl flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        <div x-show="motosEstoque.length === 0" class="col-span-full py-16 md:py-20 text-center border-2 border-dashed border-slate-200 bg-white/50 rounded-2xl flex flex-col items-center justify-center w-full">
+                            <svg class="w-10 h-10 md:w-12 md:h-12 text-slate-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                             <p class="text-premium-text text-sm font-bold">Vitrine vazia.</p>
                             <p class="text-premium-muted text-xs mt-1">Nenhuma máquina no estoque.</p>
                         </div>
@@ -488,6 +572,7 @@
     <script>
         function arkheCrm() {
             return {
+                menuPainelAberto: false, // <-- A MÁGICA DO MENU MOBILE AQUI
                 usuarioLogado: false,
                 nomeUsuario: '',
                 tipoUsuario: '', 
@@ -533,6 +618,7 @@
                     this.tipoUsuario = '';
                     this.usuarioInput = '';
                     this.rotaAtiva = 'dashboard';
+                    this.menuPainelAberto = false;
                 },
 
                 rotaAtiva: 'dashboard',
