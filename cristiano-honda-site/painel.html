@@ -37,6 +37,9 @@
         ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
         [x-cloak] { display: none !important; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        
+        /* Ajuste fino para barra de progresso do Top Motos */
+        .progress-bar-animated { transition: width 1s ease-in-out; }
     </style>
 </head>
 <body class="antialiased selection:bg-premium-dark selection:text-white overflow-x-hidden w-full max-w-[100vw]" x-data="arkheCrm()">
@@ -223,56 +226,94 @@
                         </div>
                     </div>
 
-                    <div x-show="tipoUsuario === 'Diretor'" class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm mb-8 w-full overflow-hidden">
-                        <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-2">
-                            <h3 class="text-base md:text-lg font-bold text-premium-text flex items-center gap-2">
-                                <svg class="w-5 h-5 text-premium-nivus shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                                Conversão do Funil
-                            </h3>
-                            <span class="text-[9px] md:text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider shrink-0">Visão Executiva</span>
-                        </div>
+                    <div x-show="tipoUsuario === 'Diretor'" class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8 w-full">
                         
-                        <div class="space-y-5">
-                            <div class="flex items-center">
-                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">Leads Gerados</span>
-                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
-                                    <div class="bg-slate-800 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? 100 : 0}%`"></div>
-                                </div>
-                                <span class="w-8 md:w-10 text-right font-black text-slate-800 text-base md:text-lg" x-text="stats.total"></span>
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm overflow-hidden">
+                            <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-2">
+                                <h3 class="text-base md:text-lg font-bold text-premium-text flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-premium-nivus shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                                    Conversão do Funil
+                                </h3>
+                                <span class="text-[9px] md:text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider shrink-0">Visão Executiva</span>
                             </div>
                             
-                            <div class="flex items-center">
-                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-yellow-600 uppercase tracking-wider truncate">Em Análise</span>
-                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
-                                    <div class="bg-yellow-400 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.analise / stats.total) * 100 : 0}%`"></div>
+                            <div class="space-y-5">
+                                <div class="flex items-center">
+                                    <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">Leads Gerados</span>
+                                    <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
+                                        <div class="bg-slate-800 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? 100 : 0}%`"></div>
+                                    </div>
+                                    <span class="w-8 md:w-10 text-right font-black text-slate-800 text-base md:text-lg" x-text="stats.total"></span>
                                 </div>
-                                <span class="w-8 md:w-10 text-right font-black text-yellow-600 text-base md:text-lg" x-text="stats.analise"></span>
-                            </div>
-
-                            <div class="flex items-center">
-                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-green-600 uppercase tracking-wider truncate">Aprovados</span>
-                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
-                                    <div class="bg-green-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.aprovados / stats.total) * 100 : 0}%`"></div>
+                                <div class="flex items-center">
+                                    <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-yellow-600 uppercase tracking-wider truncate">Em Análise</span>
+                                    <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
+                                        <div class="bg-yellow-400 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.analise / stats.total) * 100 : 0}%`"></div>
+                                    </div>
+                                    <span class="w-8 md:w-10 text-right font-black text-yellow-600 text-base md:text-lg" x-text="stats.analise"></span>
                                 </div>
-                                <span class="w-8 md:w-10 text-right font-black text-green-600 text-base md:text-lg" x-text="stats.aprovados"></span>
-                            </div>
-
-                            <div class="flex items-center">
-                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-red-500 uppercase tracking-wider truncate">Reprovados</span>
-                                <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
-                                    <div class="bg-red-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.reprovados / stats.total) * 100 : 0}%`"></div>
+                                <div class="flex items-center">
+                                    <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-green-600 uppercase tracking-wider truncate">Aprovados</span>
+                                    <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
+                                        <div class="bg-green-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.aprovados / stats.total) * 100 : 0}%`"></div>
+                                    </div>
+                                    <span class="w-8 md:w-10 text-right font-black text-green-600 text-base md:text-lg" x-text="stats.aprovados"></span>
                                 </div>
-                                <span class="w-8 md:w-10 text-right font-black text-red-500 text-base md:text-lg" x-text="stats.reprovados"></span>
-                            </div>
-
-                            <div class="flex items-center pt-3 border-t border-slate-100">
-                                <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-premium-nivus uppercase tracking-wider truncate">Vendas Fechadas</span>
-                                <div class="flex-1 bg-slate-100 h-4 md:h-5 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
-                                    <div class="bg-premium-nivus h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.vendas / stats.total) * 100 : 0}%`"></div>
+                                <div class="flex items-center">
+                                    <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-red-500 uppercase tracking-wider truncate">Reprovados</span>
+                                    <div class="flex-1 bg-slate-100 h-3 md:h-4 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
+                                        <div class="bg-red-500 h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.reprovados / stats.total) * 100 : 0}%`"></div>
+                                    </div>
+                                    <span class="w-8 md:w-10 text-right font-black text-red-500 text-base md:text-lg" x-text="stats.reprovados"></span>
                                 </div>
-                                <span class="w-8 md:w-10 text-right font-black text-premium-nivus text-lg md:text-xl" x-text="stats.vendas"></span>
+                                <div class="flex items-center pt-3 border-t border-slate-100">
+                                    <span class="w-24 md:w-32 text-[9px] md:text-[11px] font-bold text-premium-nivus uppercase tracking-wider truncate">Vendas Fechadas</span>
+                                    <div class="flex-1 bg-slate-100 h-4 md:h-5 rounded-full overflow-hidden mx-2 md:mx-4 relative shadow-inner">
+                                        <div class="bg-premium-nivus h-full rounded-full transition-all duration-1000" :style="`width: ${stats.total > 0 ? (stats.vendas / stats.total) * 100 : 0}%`"></div>
+                                    </div>
+                                    <span class="w-8 md:w-10 text-right font-black text-premium-nivus text-lg md:text-xl" x-text="stats.vendas"></span>
+                                </div>
                             </div>
                         </div>
+
+                        <div class="bg-premium-panel border border-premium-border rounded-2xl p-4 md:p-6 shadow-sm overflow-hidden flex flex-col">
+                            <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-2">
+                                <h3 class="text-base md:text-lg font-bold text-premium-text flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-orange-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                    Top Motos Procuradas (Views)
+                                </h3>
+                                <span class="text-[9px] md:text-[10px] bg-slate-100 border border-slate-200 px-2 py-1 rounded text-premium-muted uppercase font-bold tracking-wider shrink-0">Dados em Tempo Real</span>
+                            </div>
+                            
+                            <div class="space-y-4 flex-1">
+                                <template x-for="(moto, index) in topViewsMotos" :key="moto.id">
+                                    <div>
+                                        <div class="flex justify-between items-end mb-1">
+                                            <span class="text-[10px] md:text-xs font-bold text-slate-700 truncate pr-4" x-text="(index + 1) + '. ' + moto.modelo"></span>
+                                            <span class="text-[10px] md:text-xs font-black text-slate-400" x-text="moto.views || 0"></span>
+                                        </div>
+                                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden shadow-inner">
+                                            <div class="h-full rounded-full progress-bar-animated" 
+                                                 :class="index === 0 ? 'bg-slate-800' : (index === 1 ? 'bg-blue-500' : (index === 2 ? 'bg-purple-500' : (index === 3 ? 'bg-orange-500' : 'bg-green-500')))"
+                                                 :style="`width: ${topViewsMotos[0].views > 0 ? (moto.views / topViewsMotos[0].views) * 100 : 0}%`"></div>
+                                        </div>
+                                    </div>
+                                </template>
+                                <div x-show="topViewsMotos.length === 0" class="text-center text-[10px] md:text-xs text-premium-muted mt-4 font-medium">Nenhuma visualização registrada.</div>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
+                                <div class="bg-blue-50 rounded-xl p-3 border border-blue-100 text-center">
+                                    <p class="text-[9px] md:text-[10px] text-blue-600 font-bold uppercase tracking-wider mb-1">Financiamentos</p>
+                                    <p class="text-xl md:text-2xl font-black text-blue-700" x-text="stats.interessesFinanciamento"></p>
+                                </div>
+                                <div class="bg-purple-50 rounded-xl p-3 border border-purple-100 text-center">
+                                    <p class="text-[9px] md:text-[10px] text-purple-600 font-bold uppercase tracking-wider mb-1">Consórcios</p>
+                                    <p class="text-xl md:text-2xl font-black text-purple-700" x-text="stats.interessesConsorcio"></p>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
@@ -393,7 +434,7 @@
                                         </td>
 
                                         <td class="px-4 md:px-6 py-4">
-                                            <select x-model="lead.status" @change="atualizarStatus(lead)" class="text-[10px] md:text-xs font-bold px-2 md:px-3 py-1.5 rounded-lg outline-none appearance-none border transition-colors shadow-sm cursor-pointer"
+                                            <select x-model="lead.status" @change="atualizarStatus(lead)" :disabled="tipoUsuario === 'Diretor'" class="text-[10px] md:text-xs font-bold px-2 md:px-3 py-1.5 rounded-lg outline-none appearance-none border transition-colors shadow-sm cursor-pointer"
                                                 :class="{'bg-yellow-50 text-yellow-700 border-yellow-200': lead.status === 'Análise', 'bg-green-50 text-green-700 border-green-200': lead.status === 'Aprovado', 'bg-red-50 text-red-700 border-red-200': lead.status === 'Reprovado', 'bg-blue-50 text-blue-700 border-blue-200': lead.status === 'Vendido'}">
                                                 <option value="Análise" class="bg-white text-slate-800">⏳ Em Análise</option>
                                                 <option value="Aprovado" class="bg-white text-slate-800">✅ Aprovado</option>
@@ -651,7 +692,7 @@
                     if(this.rotaAtiva === 'estoque') return 'Controle de Estoque';
                 },
 
-                stats: { total: 0, analise: 0, aprovados: 0, reprovados: 0, vendas: 0 },
+                stats: { total: 0, analise: 0, aprovados: 0, reprovados: 0, vendas: 0, interessesFinanciamento: 0, interessesConsorcio: 0 },
                 leadsVisiveis: [],
                 topRanking: [],
                 rankingLeads: [],
@@ -660,6 +701,7 @@
                 novoLead: { nome: '', moto: '', telefone: '', status: 'Análise' },
                 novaMoto: { modelo: '', cilindrada: '', ano: '', preco: '', km: '', cor: '', placa: '', fotos: [] },
                 motosEstoque: [], 
+                topViewsMotos: [], // MÁGICA: Array do Top Motos
                 
                 ranking: [],
 
@@ -675,6 +717,10 @@
                     this.stats.aprovados = this.leadsVisiveis.filter(l => l.status === 'Aprovado').length;
                     this.stats.reprovados = this.leadsVisiveis.filter(l => l.status === 'Reprovado').length;
                     
+                    // Contagem das Tags Analíticas
+                    this.stats.interessesFinanciamento = this.leads.filter(l => l.interesse_finance === true).length;
+                    this.stats.interessesConsorcio = this.leads.filter(l => l.interesse_consorcio === true).length;
+
                     const todosOsNomes = this.usuariosPermitidos.map(u => u.nome);
                     let rankingSalvo = JSON.parse(localStorage.getItem('arkhe_ranking')) || [];
                     
@@ -707,6 +753,11 @@
                     this.rankingLeads = todosOsNomes.map(nome => {
                         return { nome: nome, leads: contagemLeads[nome] };
                     }).sort((a, b) => b.leads - a.leads);
+                    
+                    // Monta o Top 5 Motos Mais Vistas
+                    let motosComViews = [...this.motosEstoque].filter(m => m.views && m.views > 0);
+                    motosComViews.sort((a, b) => b.views - a.views);
+                    this.topViewsMotos = motosComViews.slice(0, 5);
                 },
 
                 async init() {
@@ -715,7 +766,6 @@
                         this.leads = leadsData;
                     }
                     
-                    // MÁGICA: Agora a busca traz a coluna 'reservada' e 'comprovante'
                     const { data: estoqueData } = await window.banco.from('estoque').select('*').order('created_at', { ascending: false });
                     
                     if (estoqueData) {
@@ -854,7 +904,6 @@
                     }
                 },
 
-                // MÁGICA: FUNÇÃO DE RESERVA COM COMPROVANTE PIX
                 async confirmarReserva(index, event) {
                     const file = event.target.files[0];
                     if (!file) return;
@@ -863,7 +912,6 @@
                     if (file.type.includes('image')) {
                         base64Result = await this.comprimirImagem(file);
                     } else {
-                        // Se for PDF, lê direto como Data URL
                         base64Result = await new Promise((resolve) => {
                             const reader = new FileReader();
                             reader.onload = (e) => resolve(e.target.result);
@@ -887,7 +935,6 @@
                     }
                 },
 
-                // MÁGICA: ABRIR COMPROVANTE DO PIX
                 verComprovante(base64Data) {
                     if (!base64Data) {
                         alert('Sem comprovante anexado.');
