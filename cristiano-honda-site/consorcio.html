@@ -187,7 +187,7 @@
                     tipoCota: 'Nova',
                     openMenu: false,
                     
-                    // A MÁGICA: O NOME VEM DO BOTÃO
+                    // MÁGICA DE TAGS DE LEADS
                     async enviarLead(telefone, nomeVendedorEscolhido) {
                         if(this.nome.trim() === '') {
                             alert('Por favor, informe seu nome antes de escolher o consultor.');
@@ -200,14 +200,14 @@
                             return;
                         }
 
-                        // MÁGICA ARKHE TECH: Salvando Consórcio no Supabase COM O NOME EXATO DO VENDEDOR
                         try {
                             await window.banco.from('leads').insert([{
                                 nome: this.nome,
                                 moto: 'Consórcio: ' + this.modelo + ' (' + this.prazo + 'x)',
                                 telefone: 'Aguardando Contato', 
                                 status: 'Análise',
-                                vendedor: nomeVendedorEscolhido // AQUI ESTÁ A CORREÇÃO
+                                vendedor: nomeVendedorEscolhido,
+                                interesse_consorcio: true // <--- A MÁGICA PARA O GRÁFICO!
                             }]);
                         } catch (e) {
                             console.error('Erro ao salvar no banco', e);
@@ -407,7 +407,7 @@
         </div>
     </section>
 
-    <footer class="bg-[#1D1D1F] text-white pt-16 pb-8 border-t border-white/10 mt-10">
+    <footer class="bg-premium-dark text-white pt-16 pb-8 border-t border-white/10 mt-10">
         <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
             <h2 class="text-2xl font-light tracking-tight mb-4 uppercase">
                 Cristiano <span class="font-bold text-premium-honda">Honda</span>
